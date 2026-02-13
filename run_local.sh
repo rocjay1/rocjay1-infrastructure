@@ -52,7 +52,7 @@ export GOTMPDIR=$(pwd)/../../.gotmp
 export GOCACHE=$(pwd)/../../.gotmp/cache
 export GOPATH=$(pwd)/../../.gotmp
 
-go build -o handler cmd/handler/main.go
+go build -o handler_exec cmd/handler/main.go
 if [ $? -ne 0 ]; then
     echo "Go build failed."
     exit 1
@@ -71,7 +71,10 @@ export ACCOUNTS_TABLE="accounts"
 echo "Starting Azure Functions Backend..."
 # Start Func in background
 export FUNCTIONS_WORKER_RUNTIME=custom
-func start --port 7071 &
+# Explicitly set connection string to avoid "Missing value" errors
+export AzureWebJobsStorage="DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://127.0.0.1:10000/devstoreaccount1;QueueEndpoint=http://127.0.0.1:10001/devstoreaccount1;TableEndpoint=http://127.0.0.1:10002/devstoreaccount1;"
+
+func start --port 7071 --verbose &
 FUNC_PID=$!
 
 # Wait for Func to start (simple sleep for now, could be more robust)

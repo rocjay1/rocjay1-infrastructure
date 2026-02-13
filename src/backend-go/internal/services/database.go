@@ -475,7 +475,8 @@ func (s *DatabaseService) SaveTransactions(ctx context.Context, transactions []m
 }
 
 // UpdateCardBalance updates the current balance of a credit card.
-func (s *DatabaseService) UpdateCardBalance(ctx context.Context, accountNumber int, delta decimal.Decimal) error {
+// UpdateCardBalance updates the current balance of a credit card and optionally updates LastReconciled.
+func (s *DatabaseService) UpdateCardBalance(ctx context.Context, accountNumber int, delta decimal.Decimal, lastReconciled string) error {
 	client := s.getClient(s.creditCardsTable)
 
 	// Try RowKey = AccountNumber first
@@ -495,6 +496,23 @@ func (s *DatabaseService) UpdateCardBalance(ctx context.Context, accountNumber i
 
 		newBal := currentBal.Add(delta)
 		parsed["CurrentBalance"] = newBal.InexactFloat64()
+
+		// Log the update attempt for debugging
+		slog.Info("updating card balance entity", "account_number", accountNumber, "old_balance", currentBal, "new_balance", newBal, "incoming_last_reconciled", lastReconciled, "current_last_reconciled", parsed["LastReconciled"])
+
+		if lastReconciled != "" {
+			// Compare dates to ensure we don't go backwards
+			updateDate := true
+			if currentLast, ok := parsed["LastReconciled"].(string); ok && currentLast != "" {
+				if lastReconciled <= currentLast {
+					updateDate = false
+					slog.Info("skipping last_reconciled update", "reason", "newer_or_equal_exists", "incoming", lastReconciled, "existing", currentLast)
+				}
+			}
+			if updateDate {
+				parsed["LastReconciled"] = lastReconciled
+			}
+		}
 
 		updatedJson, _ := json.Marshal(parsed)
 		_, err := client.UpdateEntity(ctx, updatedJson, nil)
@@ -530,6 +548,17 @@ func (s *DatabaseService) UpdateCardBalance(ctx context.Context, accountNumber i
 			}
 			newBal := currentBal.Add(delta)
 			parsed["CurrentBalance"] = newBal.InexactFloat64()
+
+			if lastReconciled != "" {
+				// Compare dates to ensure we don't go backwards
+				if currentLast, ok := parsed["LastReconciled"].(string); ok && currentLast != "" {
+					if lastReconciled > currentLast {
+						parsed["LastReconciled"] = lastReconciled
+					}
+				} else {
+					parsed["LastReconciled"] = lastReconciled
+				}
+			}
 
 			updatedJson, _ := json.Marshal(parsed)
 			_, err := client.UpdateEntity(ctx, updatedJson, nil)

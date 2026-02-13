@@ -14,7 +14,7 @@ type DatabaseClient interface {
 	GetCreditCards(ctx context.Context) ([]models.CreditCard, error)
 	SaveCreditCard(ctx context.Context, card models.CreditCard) error
 	DeleteCreditCard(ctx context.Context, id string) error
-	UpdateCardBalance(ctx context.Context, accountNumber int, delta decimal.Decimal) error
+	UpdateCardBalance(ctx context.Context, accountNumber int, delta decimal.Decimal, lastReconciled string) error
 
 	SaveTransactions(ctx context.Context, transactions []models.Transaction) ([]models.Transaction, error)
 }

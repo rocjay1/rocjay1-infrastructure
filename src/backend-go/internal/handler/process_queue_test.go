@@ -47,7 +47,8 @@ func TestProcessQueue_Success(t *testing.T) {
 	}
 
 	// Mock Database UpdateCardBalance
-	mockDb.UpdateCardBalanceFunc = func(ctx context.Context, accountNumber int, delta decimal.Decimal) error {
+	// Mock Database UpdateCardBalance
+	mockDb.UpdateCardBalanceFunc = func(ctx context.Context, accountNumber int, delta decimal.Decimal, lastReconciled string) error {
 		assert.Equal(t, 12345, accountNumber)
 		assert.True(t, delta.Equal(decimal.NewFromFloat(100.50)))
 		return nil

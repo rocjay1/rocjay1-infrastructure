@@ -14,7 +14,7 @@ type MockDatabaseClient struct {
 	GetCreditCardsFunc    func(ctx context.Context) ([]models.CreditCard, error)
 	SaveCreditCardFunc    func(ctx context.Context, card models.CreditCard) error
 	DeleteCreditCardFunc  func(ctx context.Context, id string) error
-	UpdateCardBalanceFunc func(ctx context.Context, accountNumber int, delta decimal.Decimal) error
+	UpdateCardBalanceFunc func(ctx context.Context, accountNumber int, delta decimal.Decimal, lastReconciled string) error
 	SaveTransactionsFunc  func(ctx context.Context, transactions []models.Transaction) ([]models.Transaction, error)
 }
 
@@ -53,9 +53,9 @@ func (m *MockDatabaseClient) DeleteCreditCard(ctx context.Context, id string) er
 	return nil
 }
 
-func (m *MockDatabaseClient) UpdateCardBalance(ctx context.Context, accountNumber int, delta decimal.Decimal) error {
+func (m *MockDatabaseClient) UpdateCardBalance(ctx context.Context, accountNumber int, delta decimal.Decimal, lastReconciled string) error {
 	if m.UpdateCardBalanceFunc != nil {
-		return m.UpdateCardBalanceFunc(ctx, accountNumber, delta)
+		return m.UpdateCardBalanceFunc(ctx, accountNumber, delta, lastReconciled)
 	}
 	return nil
 }
