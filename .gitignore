@@ -1,36 +1,21 @@
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-.venv/
-venv/
-env/
-.env
-
 # Terraform
 .terraform/
 *.tfstate
-*.tfstate.backup
+*.tfstate.*
+crash.log
+crash.*.log
 *.tfvars
+*.tfvars.json
 *.tfplan
-
-# Azure Functions
-local.settings.json
-.func/
-
-# Azurite
-.azurite/
-
-# VS Code
-.vscode/
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraformrc
+terraform.rc
 
 # Mac
 .DS_Store
 
-# Frontend
-
-# Backend
-/src/backend/config.json
-
-# Other
+# Infrastructure
 rpi-cockpit-tunnel/
