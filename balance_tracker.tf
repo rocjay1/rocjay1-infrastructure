@@ -98,7 +98,7 @@ resource "cloudflare_zero_trust_access_policy" "allow_entra_group" {
     {
       azure_ad = {
         identity_provider_id = cloudflare_zero_trust_access_identity_provider.entra.id
-        id                   = azuread_group.cloudflare_access_users.id
+        id                   = azuread_group.cloudflare_access_users.object_id
       }
     }
   ]

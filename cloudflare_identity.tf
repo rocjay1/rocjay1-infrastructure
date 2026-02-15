@@ -95,3 +95,8 @@ resource "azuread_group" "cloudflare_access_users" {
   assignable_to_role      = false
   prevent_duplicate_names = true
 }
+
+resource "azuread_group_member" "owner" {
+  group_object_id  = azuread_group.cloudflare_access_users.object_id
+  member_object_id = data.azuread_client_config.current.object_id
+}
