@@ -1,45 +1,21 @@
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-.venv/
-venv/
-env/
-.env
-
 # Terraform
 .terraform/
 *.tfstate
-*.tfstate.backup
+*.tfstate.*
+crash.log
+crash.*.log
 *.tfvars
+*.tfvars.json
 *.tfplan
-
-# Azure Functions
-local.settings.json
-.func/
-
-# Azurite
-.azurite/
-
-# VS Code
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraformrc
+terraform.rc
 
 # Mac
 .DS_Store
 
-# Frontend
-
-# Backend
-/src/backend/config.json
-
-# Ref
-ref/2026-01-31T15_21_16.602Z-transactions.csv
-
-# Go 
-.go/
-go-build-tmp/
-.gotmp/
-src/backend-go/handler
-src/frontend/dist/
-
-# Node.js
-node_modules/
+# Infrastructure
+rpi-cockpit-tunnel/
