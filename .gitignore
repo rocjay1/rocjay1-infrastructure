@@ -31,3 +31,6 @@ local.settings.json
 
 # Backend
 /src/backend/config.json
+
+# Other
+rpi-cockpit-tunnel/
