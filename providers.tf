@@ -1,9 +1,5 @@
 terraform {
   required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "~> 4.0"
-    }
     azuread = {
       source  = "hashicorp/azuread"
       version = "~> 3.0"
@@ -21,12 +17,6 @@ terraform {
       version = "~> 0.11"
     }
   }
-}
-
-provider "azurerm" {
-  features {}
-  subscription_id     = var.subscription_id
-  storage_use_azuread = true
 }
 
 provider "azuread" {}
