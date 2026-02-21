@@ -72,6 +72,29 @@ services:
     networks:
       - tunnel-net
 
+  loki:
+    image: grafana/loki:latest
+    container_name: loki
+    restart: unless-stopped
+    ports:
+      - "3100:3100"
+    volumes:
+      - loki-data:/loki
+    networks:
+      - tunnel-net
+
+  promtail:
+    image: grafana/promtail:latest
+    container_name: promtail
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - ./promtail-config.yml:/etc/promtail/promtail-config.yml:ro
+    command: -config.file=/etc/promtail/promtail-config.yml
+    networks:
+      - tunnel-net
+
 networks:
   tunnel-net:
     driver: bridge
@@ -80,3 +103,4 @@ volumes:
   backend-data:
   prometheus-data:
   grafana-data:
+  loki-data:

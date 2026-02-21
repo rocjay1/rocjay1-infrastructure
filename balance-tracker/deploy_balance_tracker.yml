@@ -46,6 +46,12 @@
         dest: "{{ project_root }}/prometheus.yml"
         mode: '0644'
 
+    - name: Template Promtail configuration
+      ansible.builtin.template:
+        src: "./templates/promtail-config.yml.j2"
+        dest: "{{ project_root }}/promtail-config.yml"
+        mode: '0644'
+
     - name: Create docker-config.json with GHCR credentials
       ansible.builtin.copy:
         dest: "{{ project_root }}/docker-config.json"
