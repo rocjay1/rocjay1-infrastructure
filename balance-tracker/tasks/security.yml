@@ -24,6 +24,24 @@
     rule: allow
     name: OpenSSH
 
+- name: Allow Prometheus through UFW
+  community.general.ufw:
+    rule: allow
+    port: '9090'
+    proto: tcp
+
+- name: Allow Node Exporter through UFW
+  community.general.ufw:
+    rule: allow
+    port: '9100'
+    proto: tcp
+
+- name: Allow Grafana through UFW
+  community.general.ufw:
+    rule: allow
+    port: '3000'
+    proto: tcp
+
 - name: Enable UFW
   community.general.ufw:
     state: enabled
