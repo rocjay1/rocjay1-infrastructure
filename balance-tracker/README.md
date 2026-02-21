@@ -1,21 +1,59 @@
-# Balance Tracker Deployment
+# Balance Tracker Infrastructure
 
-This directory contains the Ansible configuration to manage the full lifecycle and deployment of the Balance Tracker application on a Raspberry Pi.
+This workspace contains the infrastructure-as-code and configuration management for the Balance Tracker application.
 
-## Architecture
+## Structure
 
-The deployment consists of:
+- **[terraform](terraform/)**: Cloudflare and Azure AD (Entra ID) provisioning via Terraform.
+- **[ansible](ansible/)**: Host configuration, security hardening, and Docker-based application deployment.
+
+---
+
+## Provisioning (Terraform)
+
+Located in the `terraform/` directory.
+
+### Requirements (Terraform)
+
+- Terraform CLI
+- Cloudflare API Token (set via `CLOUDFLARE_API_TOKEN` or `terraform.tfvars`)
+- Access to the Azure Storage Account for remote state (authenticated via Azure CLI).
+
+### Usage (Terraform)
+
+```bash
+cd terraform
+terraform init
+terraform apply
+```
+
+---
+
+## Deployment (Ansible)
+
+Located in the `ansible/` directory. This manages the full lifecycle of the Balance Tracker application on a Linux host (e.g., Raspberry Pi).
+
+### Architecture
+
+The deployment consists of several Dockerized services:
 
 - **balance-tracker-frontend**: GHCR Image containing the Vite/Vue front-end.
 - **balance-tracker-backend**: GHCR Image containing the Go back-end handling SQLite transactions and API logic.
-- **watchtower**: Automatically maintains up-to-date images from GHCR without manual intervention.
 - **cloudflared**: A secure Cloudflare Tunnel to expose the front-end to the internet without opening inbound firewall ports.
+- **watchtower**: Automatically maintains up-to-date images from GHCR.
 
-## Requirements
+#### Monitoring & Observability
 
-Ensure the target machine (e.g., Raspberry Pi) is accessible via SSH and `python3` is installed.
+- **Prometheus**: Collects system and application metrics.
+- **Grafana**: Provides dashboards for metrics visualization.
+- **Loki & Promtail**: Centralized log aggregation and analysis.
+- **Node Exporter**: System-level metrics from the host machine.
 
-On your deployment machine (e.g., your Mac), you need Ansible installed:
+### Requirements (Ansible)
+
+Ensure the target machine is accessible via SSH and `python3` is installed.
+
+On your deployment machine, you need Ansible installed:
 
 ```bash
 brew install ansible
@@ -23,41 +61,40 @@ ansible-galaxy collection install community.docker
 ansible-galaxy collection install community.general
 ```
 
-## Setup & Secrets
+### Setup & Secrets
 
-Sensitive variables are managed by Ansible Vault.
+Sensitive variables and authentication credentials are managed by Ansible Vault.
 
 1. **Create the Vault Password File**:
-   Store your vault password in a local file (this is ignored by Git).
+   Store your vault password in `ansible/.vault_pass` (this file is ignored by Git).
 
    ```bash
+   cd ansible
    echo "your_secure_password" > .vault_pass
    ```
 
 2. **Configure Vault Variables**:
-   There is one vault file used in this deployment:
+   Edit `ansible/vars/vault.yml` to include:
+   - `vault_tunnel_token`: The Cloudflare Tunnel token.
+   - `vault_ghcr_auth`: Base64 encoded GHCR credentials for pulling private images.
 
-   - `vars/vault.yml` (Core infrastructure and application secrets):
-     Contains the `vault_tunnel_token` for Cloudflare, `vault_ghcr_auth` for Docker pulls, and `vault_gmail_app_password` used by the backend.
+   ```bash
+   ansible-vault edit vars/vault.yml --vault-password-file .vault_pass
+   ```
 
-     ```bash
-     ansible-vault edit vars/vault.yml --vault-password-file .vault_pass
-     ```
+### Deployment
 
-## Deployment
-
-To provision the server, apply security hardening, configure Docker, setup SQLite backups, and deploy the application, run:
+To provision the server and deploy the application:
 
 ```bash
+cd ansible
 ansible-playbook -i hosts.ini deploy_balance_tracker.yml --vault-password-file .vault_pass
 ```
 
 ### Ansible Roles & Tasks
 
-The main playbook `deploy_balance_tracker.yml` imports specialized tasks to manage the node:
-
-- `tasks/security.yml`: Configures UFW firewall, unattended-upgrades, and SSH hardening.
-- `tasks/docker.yml`: Installs the Docker Engine, configures the daemon for log rotation, and manages permissions.
-- `tasks/backups.yml`: Creates daily cron jobs to safely backup the `.db` SQLite file.
-- `tasks/maintenance.yml`: Sets up metrics via `prometheus-node-exporter`, weekly docker cache pruning, and automated reboots.
-- `handlers/main.yml`: Handles restart triggers for services like SSH and Docker.
+- `tasks/security.yml`: Firewall (UFW), SSH hardening, and user management.
+- `tasks/docker.yml`: Docker Engine setup and log rotation.
+- `tasks/backups.yml`: SQLite database backups.
+- `tasks/maintenance.yml`: Node Exporter installation and cron-based maintenance (e.g., system prunes).
+- `handlers/main.yml`: Service restart triggers and system reboots.

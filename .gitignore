@@ -1,5 +1,5 @@
 # Terraform
-.terraform/
+**/.terraform/
 *.tfstate
 *.tfstate.*
 crash.log
@@ -13,6 +13,9 @@ override.tf.json
 *_override.tf.json
 .terraformrc
 terraform.rc
+
+# Ansible
+.vault_pass
 
 # Mac
 .DS_Store

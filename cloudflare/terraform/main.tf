@@ -1,5 +1,54 @@
-data "azuread_client_config" "current" {}
+data "cloudflare_account" "main" {
+  account_id = var.account_id
+}
 
+data "cloudflare_zone" "main" {
+  zone_id = var.zone_id
+}
+
+resource "cloudflare_zone_dnssec" "main_zone_dnssec" {
+  zone_id             = data.cloudflare_zone.main.zone_id
+  dnssec_multi_signer = false
+  dnssec_presigned    = false
+  dnssec_use_nsec3    = false
+  status              = "active"
+
+  lifecycle {
+    ignore_changes = [
+      dnssec_multi_signer,
+      dnssec_presigned,
+      dnssec_use_nsec3,
+      algorithm,
+      digest,
+      digest_algorithm,
+      digest_type,
+      ds,
+      flags,
+      key_tag,
+      key_type,
+      modified_on,
+      public_key,
+    ]
+  }
+}
+
+resource "cloudflare_ruleset" "geoblock" {
+  zone_id     = var.zone_id
+  name        = "Geo Block"
+  description = "Block non-US traffic"
+  kind        = "zone"
+  phase       = "http_request_firewall_custom"
+
+  rules = [{
+    action      = "block"
+    expression  = "(ip.src.country ne \"US\")"
+    description = "Block non-US traffic"
+    enabled     = true
+  }]
+}
+
+# Identity Provider Setup (Entra ID)
+data "azuread_client_config" "current" {}
 data "azuread_application_published_app_ids" "well_known" {}
 
 data "azuread_service_principal" "msgraph" {
@@ -31,7 +80,6 @@ locals {
   ]
 
   cloudflare_redirect_uri = "https://${var.cloudflare_team_domain}.cloudflareaccess.com/cdn-cgi/access/callback"
-
 }
 
 resource "azuread_application" "cloudflare_access" {
@@ -99,4 +147,18 @@ resource "azuread_group" "cloudflare_access_users" {
 resource "azuread_group_member" "owner" {
   group_object_id  = azuread_group.cloudflare_access_users.object_id
   member_object_id = data.azuread_client_config.current.object_id
+}
+
+resource "cloudflare_zero_trust_access_identity_provider" "entra" {
+  account_id = var.account_id
+  name       = "Entra ID"
+  type       = "azureAD"
+
+  config = {
+    client_id      = azuread_application.cloudflare_access.client_id
+    client_secret  = azuread_application_password.cloudflare_access.value
+    directory_id   = data.azuread_client_config.current.tenant_id
+    support_groups = true
+    pkce_enabled   = true
+  }
 }

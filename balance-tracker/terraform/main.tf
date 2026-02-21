@@ -58,8 +58,6 @@ resource "cloudflare_zero_trust_tunnel_cloudflared_config" "balance_tracker_tunn
   }
 }
 
-
-# Access Application
 resource "cloudflare_zero_trust_access_application" "balance_tracker_app" {
   account_id = var.account_id
   name       = "Balance Tracker"
@@ -75,20 +73,6 @@ resource "cloudflare_zero_trust_access_application" "balance_tracker_app" {
   }]
 }
 
-resource "cloudflare_zero_trust_access_identity_provider" "entra" {
-  account_id = var.account_id
-  name       = "Entra ID"
-  type       = "azureAD"
-
-  config = {
-    client_id      = azuread_application.cloudflare_access.client_id
-    client_secret  = azuread_application_password.cloudflare_access.value
-    directory_id   = data.azuread_client_config.current.tenant_id
-    support_groups = true # enable group lookups
-    pkce_enabled   = true
-  }
-}
-
 resource "cloudflare_zero_trust_access_policy" "allow_entra_group" {
   account_id = var.account_id
   name       = "Allow Entra Group"
@@ -97,9 +81,18 @@ resource "cloudflare_zero_trust_access_policy" "allow_entra_group" {
   include = [
     {
       azure_ad = {
-        identity_provider_id = cloudflare_zero_trust_access_identity_provider.entra.id
-        id                   = azuread_group.cloudflare_access_users.object_id
+        identity_provider_id = data.terraform_remote_state.cloudflare_shared.outputs.entra_identity_provider_id
+        id                   = data.terraform_remote_state.cloudflare_shared.outputs.entra_group_id
       }
     }
   ]
+}
+
+resource "cloudflare_dns_record" "balance_tracker_dns" {
+  zone_id = var.zone_id
+  name    = var.balance_tracker_hostname
+  type    = "CNAME"
+  content = "${cloudflare_zero_trust_tunnel_cloudflared.balance_tracker_tunnel.id}.cfargotunnel.com"
+  proxied = true
+  ttl     = 1
 }
