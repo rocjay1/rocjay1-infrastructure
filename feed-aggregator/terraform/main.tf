@@ -23,7 +23,7 @@ resource "cloudflare_pages_project" "feed_aggregator" {
 
   build_config = {
     build_command   = "exit 0"
-    destination_dir = "."
+    destination_dir = "public"
     root_dir        = ""
   }
 
@@ -31,13 +31,13 @@ resource "cloudflare_pages_project" "feed_aggregator" {
     production = {
       compatibility_date = "2024-01-01"
       environment_variables = {
-        NODE_VERSION = "20"
+        NODE_VERSION = "22"
       }
     }
     preview = {
       compatibility_date = "2024-01-01"
       environment_variables = {
-        NODE_VERSION = "20"
+        NODE_VERSION = "22"
       }
     }
   }
