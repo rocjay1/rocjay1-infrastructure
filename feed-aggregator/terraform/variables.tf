@@ -9,14 +9,14 @@ variable "account_id" {
   type        = string
 }
 
-variable "project_name" {
-  description = "The name of the Cloudflare Pages project."
-  type        = string
-  default     = "feed-aggregator"
-}
+# variable "project_name" {
+#   description = "The name of the Cloudflare Pages project."
+#   type        = string
+#   default     = "feed-aggregator"
+# }
 
-variable "github_repo" {
-  description = "The GitHub repository for the Pages project."
-  type        = string
-  default     = "rocjay1/feed-aggregator"
-}
+# variable "github_repo" {
+#   description = "The GitHub repository for the Pages project."
+#   type        = string
+#   default     = "rocjay1/feed-aggregator"
+# }
