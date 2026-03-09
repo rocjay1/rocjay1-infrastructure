@@ -14,8 +14,8 @@ resource "cloudflare_pages_project" "feed_aggregator" {
       repo_name                      = split("/", var.github_repo)[1]
       production_branch              = "main"
       pr_comments_enabled            = true
-      deployments_enabled            = true
-      production_deployments_enabled = true
+      deployments_enabled            = false
+      production_deployments_enabled = false
       preview_deployment_setting     = "all"
       preview_branch_includes        = ["*"]
     }
