@@ -22,7 +22,7 @@ resource "cloudflare_pages_project" "feed_aggregator" {
   }
 
   build_config = {
-    build_command   = "exit 0"
+    build_command   = "npm run generate"
     destination_dir = "public"
     root_dir        = ""
   }
