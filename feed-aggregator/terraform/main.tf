@@ -22,7 +22,7 @@ resource "cloudflare_pages_project" "feed_aggregator" {
   }
 
   build_config = {
-    build_command   = "npm run generate"
+    build_command   = "curl -LsSf https://astral.sh/uv/install.sh | sh && $HOME/.cargo/bin/uv run python src/generate.py"
     destination_dir = "public"
     root_dir        = ""
   }
@@ -31,13 +31,13 @@ resource "cloudflare_pages_project" "feed_aggregator" {
     production = {
       compatibility_date = "2024-01-01"
       environment_variables = {
-        NODE_VERSION = "22"
+        PYTHON_VERSION = "3.13"
       }
     }
     preview = {
       compatibility_date = "2024-01-01"
       environment_variables = {
-        NODE_VERSION = "22"
+        PYTHON_VERSION = "3.13"
       }
     }
   }
