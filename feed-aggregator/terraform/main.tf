@@ -22,7 +22,7 @@ resource "cloudflare_pages_project" "feed_aggregator" {
   }
 
   build_config = {
-    build_command   = "curl -LsSf https://astral.sh/uv/install.sh | sh && $HOME/.cargo/bin/uv run python src/generate.py"
+    build_command   = "curl -LsSf https://astral.sh/uv/install.sh | sh && /opt/buildhome/.local/bin run python src/generate.py"
     destination_dir = "public"
     root_dir        = ""
   }
