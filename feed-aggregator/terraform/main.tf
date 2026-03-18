@@ -1,5 +1,5 @@
 resource "random_id" "project_suffix" {
-  byte_length = 4
+  byte_length = 6
 }
 
 resource "cloudflare_pages_project" "feed_aggregator" {
