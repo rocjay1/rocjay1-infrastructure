@@ -1,61 +1,45 @@
-resource "random_bytes" "balance_tracker_tunnel_secret" {
-  length = 32
-}
+module "cloudflare_tunnel" {
+  source = "../../terraform/modules/cloudflare_tunnel_app"
 
-resource "cloudflare_zero_trust_tunnel_cloudflared" "balance_tracker_tunnel" {
-  account_id    = var.account_id
-  name          = var.balance_tracker_tunnel_name
-  tunnel_secret = random_bytes.balance_tracker_tunnel_secret.base64
-}
+  account_id           = var.account_id
+  zone_id              = var.zone_id
+  tunnel_name          = var.balance_tracker_tunnel_name
+  cname_hostname       = var.balance_tracker_hostname
 
-data "cloudflare_zero_trust_tunnel_cloudflared_token" "balance_tracker_tunnel" {
-  account_id = var.account_id
-  tunnel_id  = cloudflare_zero_trust_tunnel_cloudflared.balance_tracker_tunnel.id
-}
-
-resource "cloudflare_zero_trust_tunnel_cloudflared_config" "balance_tracker_tunnel_cfg" {
-  account_id = var.account_id
-  tunnel_id  = cloudflare_zero_trust_tunnel_cloudflared.balance_tracker_tunnel.id
-
-  config = {
-    ingress = [
-      {
-        hostname = "${var.balance_tracker_hostname}.${var.zone_name}"
-        path     = "api"
-        service  = "http://backend:8080"
-        origin_request = {
-          connect_timeout          = 10
-          disable_chunked_encoding = true
-          http2_origin             = false
-          keep_alive_connections   = 200
-          keep_alive_timeout       = 300
-          no_tls_verify            = true
-          tcp_keep_alive           = 30
-          tls_timeout              = 10
-        }
-      },
-      {
-        hostname = "${var.balance_tracker_hostname}.${var.zone_name}"
-        service  = "http://frontend:80"
-        origin_request = {
-          connect_timeout          = 10
-          disable_chunked_encoding = true
-          http2_origin             = false
-          keep_alive_connections   = 200
-          keep_alive_timeout       = 300
-          no_tls_verify            = true
-          tcp_keep_alive           = 30
-          tls_timeout              = 10
-        }
-      },
-      {
-        service = "http_status:404"
+  ingress_rules = [
+    {
+      hostname = "${var.balance_tracker_hostname}.${var.zone_name}"
+      path     = "api"
+      service  = "http://backend:8080"
+      origin_request = {
+        connect_timeout          = 10
+        disable_chunked_encoding = true
+        http2_origin             = false
+        keep_alive_connections   = 200
+        keep_alive_timeout       = 300
+        no_tls_verify            = true
+        tcp_keep_alive           = 30
+        tls_timeout              = 10
       }
-    ]
-    warp_routing = {
-      enabled = false
+    },
+    {
+      hostname = "${var.balance_tracker_hostname}.${var.zone_name}"
+      service  = "http://frontend:80"
+      origin_request = {
+        connect_timeout          = 10
+        disable_chunked_encoding = true
+        http2_origin             = false
+        keep_alive_connections   = 200
+        keep_alive_timeout       = 300
+        no_tls_verify            = true
+        tcp_keep_alive           = 30
+        tls_timeout              = 10
+      }
+    },
+    {
+      service = "http_status:404"
     }
-  }
+  ]
 }
 
 resource "cloudflare_zero_trust_access_application" "balance_tracker_app" {
@@ -88,11 +72,22 @@ resource "cloudflare_zero_trust_access_policy" "allow_entra_group" {
   ]
 }
 
-resource "cloudflare_dns_record" "balance_tracker_dns" {
-  zone_id = var.zone_id
-  name    = var.balance_tracker_hostname
-  type    = "CNAME"
-  content = "${cloudflare_zero_trust_tunnel_cloudflared.balance_tracker_tunnel.id}.cfargotunnel.com"
-  proxied = true
-  ttl     = 1
+moved {
+  from = random_bytes.balance_tracker_tunnel_secret
+  to   = module.cloudflare_tunnel.random_bytes.tunnel_secret
+}
+
+moved {
+  from = cloudflare_zero_trust_tunnel_cloudflared.balance_tracker_tunnel
+  to   = module.cloudflare_tunnel.cloudflare_zero_trust_tunnel_cloudflared.tunnel
+}
+
+moved {
+  from = cloudflare_zero_trust_tunnel_cloudflared_config.balance_tracker_tunnel_cfg
+  to   = module.cloudflare_tunnel.cloudflare_zero_trust_tunnel_cloudflared_config.tunnel_cfg
+}
+
+moved {
+  from = cloudflare_dns_record.balance_tracker_dns
+  to   = module.cloudflare_tunnel.cloudflare_dns_record.dns
 }

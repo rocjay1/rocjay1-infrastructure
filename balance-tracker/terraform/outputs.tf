@@ -20,6 +20,6 @@ output "cloudflare_access_redirect_uri" {
 }
 
 output "balance_tracker_tunnel_token" {
-  value     = data.cloudflare_zero_trust_tunnel_cloudflared_token.balance_tracker_tunnel.token
+  value     = module.cloudflare_tunnel.tunnel_token
   sensitive = true
 }
