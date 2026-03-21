@@ -24,6 +24,9 @@
         file: vars/vault.yml
       when: vault_file.stat.exists
 
+  roles:
+    - pi_baseline
+
   tasks:
     - name: Ensure project directory exists
       ansible.builtin.file:
