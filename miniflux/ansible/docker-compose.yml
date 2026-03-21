@@ -45,16 +45,6 @@ services:
     networks:
       - tunnel-net
 
-  watchtower:
-    image: nickfedor/watchtower:latest
-    container_name: watchtower-miniflux
-    restart: unless-stopped
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    command: --interval 300 --cleanup --label-enable
-    environment:
-      - WATCHTOWER_POLL_INTERVAL=300
-
 networks:
   tunnel-net:
     driver: bridge
