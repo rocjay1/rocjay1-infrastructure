@@ -12,24 +12,6 @@ resource "cloudflare_zone_dnssec" "main_zone_dnssec" {
   dnssec_presigned    = false
   dnssec_use_nsec3    = false
   status              = "active"
-
-  lifecycle {
-    ignore_changes = [
-      dnssec_multi_signer,
-      dnssec_presigned,
-      dnssec_use_nsec3,
-      algorithm,
-      digest,
-      digest_algorithm,
-      digest_type,
-      ds,
-      flags,
-      key_tag,
-      key_type,
-      modified_on,
-      public_key,
-    ]
-  }
 }
 
 resource "cloudflare_ruleset" "geoblock" {
