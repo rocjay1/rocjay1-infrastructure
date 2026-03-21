@@ -6,6 +6,7 @@ This repository centralizes the infrastructure-as-code (IaC) and configuration m
 
 The repository is organized into workspaces for different applications and shared services:
 
+- **[ansible](ansible/)**: Shared Ansible roles (e.g., `pi_baseline`) for centralized host configuration, security, and maintenance across various projects.
 - **[balance-tracker](balance-tracker/)**: Infrastructure and deployment logic for the Balance Tracker application, including Terraform for Cloudflare/Azure and Ansible for host management.
 - **[cloudflare](cloudflare/)**: Shared Cloudflare configurations and global infrastructure settings.
 - **[feed-aggregator](feed-aggregator/)**: Infrastructure provisioning for the Feed Aggregator project.

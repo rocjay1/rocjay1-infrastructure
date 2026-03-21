@@ -73,5 +73,9 @@ To provision the server and deploy the container stack:
 
 ```bash
 cd ansible
-ansible-playbook -i hosts.ini deploy_miniflux.yml --vault-password-file .vault_pass
+ansible-playbook -i hosts.ini deploy_miniflux.yml
 ```
+
+### Ansible Roles & Tasks
+
+This deployment uses the shared **`pi_baseline`** Ansible role located at the root of the repository (`../ansible/roles/pi_baseline/`). This role automatically provisions standard host security (UFW, SSH hardening), installs required Docker engines, and configures routine maintenance and log rotation on the Raspberry Pi target.

@@ -88,13 +88,15 @@ To provision the server and deploy the application:
 
 ```bash
 cd ansible
-ansible-playbook -i hosts.ini deploy_balance_tracker.yml --vault-password-file .vault_pass
+ansible-playbook -i hosts.ini deploy_balance_tracker.yml
 ```
 
 ### Ansible Roles & Tasks
 
-- `tasks/security.yml`: Firewall (UFW), SSH hardening, and user management.
-- `tasks/docker.yml`: Docker Engine setup and log rotation.
-- `tasks/backups.yml`: SQLite database backups.
-- `tasks/maintenance.yml`: Node Exporter installation and cron-based maintenance (e.g., system prunes).
-- `handlers/main.yml`: Service restart triggers and system reboots.
+This deployment uses the shared **`pi_baseline`** Ansible role located at the root of the repository (`../ansible/roles/pi_baseline/`). This shared role provides:
+
+- **Security**: Firewall (UFW), SSH hardening, and user management.
+- **Docker**: Engine setup and log rotation.
+- **Backups**: Standard database backups.
+- **Maintenance**: Node Exporter installation and cron-based maintenance (e.g., system prune).
+- **Handlers**: Service restart triggers and system reboots.
