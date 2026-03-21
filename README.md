@@ -9,6 +9,7 @@ The repository is organized into workspaces for different applications and share
 - **[balance-tracker](balance-tracker/)**: Infrastructure and deployment logic for the Balance Tracker application, including Terraform for Cloudflare/Azure and Ansible for host management.
 - **[cloudflare](cloudflare/)**: Shared Cloudflare configurations and global infrastructure settings.
 - **[feed-aggregator](feed-aggregator/)**: Infrastructure provisioning for the Feed Aggregator project.
+- **[miniflux](miniflux/)**: Infrastructure and deployment logic for the Miniflux RSS reader, utilizing Terraform for Cloudflare Tunnels and Ansible for container orchestration.
 
 ## Technologies Used
 
