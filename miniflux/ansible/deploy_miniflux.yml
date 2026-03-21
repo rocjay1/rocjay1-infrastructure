@@ -1,0 +1,68 @@
+---
+- name: Deploy Miniflux
+  hosts: miniflux_vm
+  become: yes
+
+  vars:
+    project_root: "/opt/miniflux"
+    # Fallback to empty if not provided via extra vars or interactive prompt
+    tunnel_token: "{{ vault_tunnel_token | default('set_token_in_vault') }}"
+    db_password: "{{ vault_db_password | default('set_db_password_in_vault') }}"
+    admin_password: "{{ vault_admin_password | default('set_admin_password_in_vault') }}"
+
+  # Add logic to include vault vars if the file exists
+  pre_tasks:
+    - name: Check if vault variables file exists
+      ansible.builtin.stat:
+        path: vars/vault.yml
+      register: vault_file
+      delegate_to: localhost
+      become: no
+
+    - name: Load vault variables
+      ansible.builtin.include_vars:
+        file: vars/vault.yml
+      when: vault_file.stat.exists
+
+  tasks:
+    - name: Ensure project directory exists
+      ansible.builtin.file:
+        path: "{{ project_root }}"
+        state: directory
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: '0755'
+
+    - name: Copy Docker Compose file
+      ansible.builtin.copy:
+        src: "./docker-compose.yml"
+        dest: "{{ project_root }}/docker-compose.yml"
+        mode: '0644'
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+
+    - name: Create .env file with Tunnel Token and Database Credentials
+      ansible.builtin.copy:
+        dest: "{{ project_root }}/.env"
+        content: |
+          TUNNEL_TOKEN={{ vault_tunnel_token | default(tunnel_token) }}
+          DB_PASSWORD={{ vault_db_password | default(db_password) }}
+          ADMIN_PASSWORD={{ vault_admin_password | default(admin_password) }}
+        mode: '0600'
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+
+    - name: Deploy services via Docker Compose
+      community.docker.docker_compose_v2:
+        project_src: "{{ project_root }}"
+        pull: always
+        state: present
+        remove_orphans: yes
+      become: no
+
+    - name: Prune old Docker images
+      community.docker.docker_prune:
+        images: yes
+        images_filters:
+          dangling: false
+      become: no
