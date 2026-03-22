@@ -4,7 +4,7 @@ This workspace contains the infrastructure-as-code and configuration management 
 
 ## Structure
 
-- **[terraform](terraform/)**: Cloudflare and Azure AD (Entra ID) provisioning via Terraform.
+- **[terraform](terraform/)**: Cloudflare and Azure Entra ID provisioning via Terraform.
 - **[ansible](ansible/)**: Host configuration, security hardening, and Docker-based application deployment.
 
 ---
@@ -17,7 +17,7 @@ Located in the `terraform/` directory.
 
 - Terraform CLI
 - Cloudflare API Token (set via `CLOUDFLARE_API_TOKEN` or `terraform.tfvars`)
-- Access to the Azure Storage Account for remote state (authenticated via Azure CLI).
+- Access to the Google Cloud Storage bucket for remote state (authenticated via `gcloud auth application-default login`).
 
 ### Usage (Terraform)
 
