@@ -1,0 +1,38 @@
+name: Terraform Validate
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Format Check
+        run: terraform fmt -check -recursive
+
+      - name: Terraform Init + Validate (balance-tracker)
+        working-directory: balance-tracker/terraform
+        run: |
+          terraform init -input=false
+          terraform validate
+
+      - name: Terraform Init + Validate (miniflux)
+        working-directory: miniflux/terraform
+        run: |
+          terraform init -input=false
+          terraform validate
+
+      - name: Terraform Init + Validate (cloudflare)
+        working-directory: cloudflare/terraform
+        run: |
+          terraform init -input=false
+          terraform validate
