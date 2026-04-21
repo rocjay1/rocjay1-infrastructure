@@ -35,7 +35,34 @@ install_terraform_if_missing() {
   esac
 
   local tmp_zip="/tmp/terraform_${TERRAFORM_VERSION}_linux_${arch}.zip"
-  wget -qO "${tmp_zip}" "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_${arch}.zip"
+  local base_url="https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}"
+  local archive="terraform_${TERRAFORM_VERSION}_linux_${arch}.zip"
+  local archive_url="${base_url}/${archive}"
+  local checksums="terraform_${TERRAFORM_VERSION}_SHA256SUMS"
+  local checksums_url="${base_url}/${checksums}"
+  local checksums_file="/tmp/${checksums}"
+
+  wget -qO "${tmp_zip}" "${archive_url}"
+  wget -qO "${checksums_file}" "${checksums_url}"
+
+  log "validating checksum for ${archive} (${checksums_url})"
+  local expected_hash
+  expected_hash="$(awk -v artifact="${archive}" '$2 == artifact { print $1 }' "${checksums_file}")"
+
+  if [[ -z "${expected_hash}" ]]; then
+    log "ERROR: failed to find checksum entry for ${archive} in ${checksums_url}"
+    return 1
+  fi
+
+  local actual_hash
+  actual_hash="$(sha256sum "${tmp_zip}" | awk '{ print $1 }')"
+
+  if [[ "${actual_hash}" != "${expected_hash}" ]]; then
+    log "ERROR: checksum validation failed for ${archive} (${archive_url})"
+    log "ERROR: expected ${expected_hash}, got ${actual_hash}"
+    return 1
+  fi
+
   unzip -qo "${tmp_zip}" -d /usr/local/bin
   chmod +x /usr/local/bin/terraform
 
