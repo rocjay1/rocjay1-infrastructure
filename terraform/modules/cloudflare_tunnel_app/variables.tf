@@ -15,7 +15,7 @@ variable "tunnel_name" {
 
 variable "cname_hostname" {
   type        = string
-  description = "The subdomain/hostname for the CNAME record (e.g. 'balance-tracker' or 'rss')."
+  description = "The subdomain/hostname for the CNAME record (e.g. 'rss')."
 }
 
 variable "ingress_rules" {

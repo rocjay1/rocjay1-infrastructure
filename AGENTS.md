@@ -4,7 +4,7 @@
 - This repository is infrastructure-as-code for the Rocjay ecosystem.
 - Primary tools are Terraform and Ansible.
 - Shared Terraform modules live under `terraform/modules/`.
-- Application or service workspaces live under directories such as `cloudflare/`, `balance-tracker/`, `miniflux/`, and `feed-aggregator/`.
+- Application or service workspaces live under directories such as `cloudflare/`, `miniflux/`, and `feed-aggregator/`.
 - Many workspaces use a `terraform/` subdirectory for provisioning and an `ansible/` subdirectory for host configuration and deployment.
 
 ## How to work in this repo
@@ -38,11 +38,6 @@
 - This workspace provisions shared Cloudflare and Entra/Zero Trust resources.
 - Treat changes here as high impact because other workspaces may depend on its remote-state outputs.
 - Be conservative with identity provider, group, and access-policy changes.
-
-### `balance-tracker/terraform`
-- Uses the shared `terraform/modules/cloudflare_tunnel_app` module.
-- Includes Cloudflare Zero Trust Access application and policy resources in addition to tunnel resources.
-- Check for remote-state dependencies on shared Cloudflare outputs before changing access-related resources.
 
 ### `miniflux/terraform`
 - Uses the shared `terraform/modules/cloudflare_tunnel_app` module.
