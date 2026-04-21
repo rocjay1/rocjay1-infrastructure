@@ -23,8 +23,18 @@ install_terraform_if_missing() {
   apt-get update -y
   apt-get install -y wget unzip ca-certificates
 
-  local tmp_zip="/tmp/terraform_${TERRAFORM_VERSION}_linux_amd64.zip"
-  wget -qO "${tmp_zip}" "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip"
+  local arch
+  case "$(uname -m)" in
+    x86_64) arch="amd64" ;;
+    aarch64|arm64) arch="arm64" ;;
+    *)
+      log "ERROR: unsupported architecture: $(uname -m)"
+      return 1
+      ;;
+  esac
+
+  local tmp_zip="/tmp/terraform_${TERRAFORM_VERSION}_linux_${arch}.zip"
+  wget -qO "${tmp_zip}" "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_${arch}.zip"
   unzip -qo "${tmp_zip}" -d /usr/local/bin
   chmod +x /usr/local/bin/terraform
 

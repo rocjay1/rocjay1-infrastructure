@@ -1,10 +1,10 @@
 module "cloudflare_tunnel" {
   source = "../../terraform/modules/cloudflare_tunnel_app"
 
-  account_id           = var.account_id
-  zone_id              = var.zone_id
-  tunnel_name          = var.miniflux_tunnel_name
-  cname_hostname       = var.miniflux_hostname
+  account_id     = var.account_id
+  zone_id        = var.zone_id
+  tunnel_name    = var.miniflux_tunnel_name
+  cname_hostname = var.miniflux_hostname
 
   ingress_rules = [
     {
