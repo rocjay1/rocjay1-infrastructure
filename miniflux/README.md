@@ -17,6 +17,7 @@ Located in the `terraform/` directory, this provisions the Cloudflare Tunnel (`m
 
 - Terraform CLI
 - Cloudflare API Token (set via `CLOUDFLARE_API_TOKEN` or `terraform.tfvars`)
+- Required non-secret variables: `account_id`, `zone_id`, and `zone_name` (see `terraform/terraform.tfvars.example`)
 - Access to the target GCS bucket for remote state.
 
 
