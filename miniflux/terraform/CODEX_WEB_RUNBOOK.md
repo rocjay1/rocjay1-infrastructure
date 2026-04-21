@@ -16,6 +16,9 @@ Use these environment-level settings:
 Required:
 
 - `GOOGLE_APPLICATION_CREDENTIALS_JSON`: JSON key for the Terraform GCP service account.
+- `TF_VAR_account_id`: Cloudflare account ID for this workspace.
+- `TF_VAR_zone_id`: Cloudflare zone ID for this workspace.
+- `TF_VAR_zone_name`: Cloudflare zone name for this workspace.
 
 Optional (needed if Cloudflare resources are in scope):
 
@@ -39,10 +42,14 @@ Optional if managing secrets via Terraform:
 
 The setup script (`codex/setup-codex-env.sh`) does the following:
 
-1. Installs Terraform if not present.
-2. Writes `GOOGLE_APPLICATION_CREDENTIALS_JSON` to `/tmp/gcp-terraform-sa.json`.
-3. Exports `GOOGLE_APPLICATION_CREDENTIALS`.
-4. Exports `TF_VAR_cloudflare_api_token` when `CLOUDFLARE_API_TOKEN` is set.
+1. Installs Terraform when missing.
+2. If Terraform is already installed but differs from `TERRAFORM_VERSION`, it keeps the installed version by default and logs the mismatch (`TERRAFORM_ENFORCE_VERSION=true` forces replacement).
+3. Writes `GOOGLE_APPLICATION_CREDENTIALS_JSON` to a dynamically generated temporary file via `mktemp` (or `GOOGLE_CREDS_PATH` when explicitly set).
+4. Validates the credentials JSON includes `type`, `client_email`, and `private_key`.
+5. Exports `GOOGLE_APPLICATION_CREDENTIALS`.
+6. Exports `TF_VAR_cloudflare_api_token` when `CLOUDFLARE_API_TOKEN` is set.
+
+You can also copy `terraform.tfvars.example` to `terraform.tfvars` and provide non-secret inputs there instead of exporting `TF_VAR_*` values.
 
 ## 5) Standard Terraform workflow
 

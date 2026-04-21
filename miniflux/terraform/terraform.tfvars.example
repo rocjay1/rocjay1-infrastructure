@@ -1,0 +1,7 @@
+account_id = "your-cloudflare-account-id"
+zone_id    = "your-cloudflare-zone-id"
+zone_name  = "example.com"
+
+# Optional overrides:
+# miniflux_hostname    = "rss"
+# miniflux_tunnel_name = "miniflux-tunnel"
