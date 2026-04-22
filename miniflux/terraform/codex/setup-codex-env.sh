@@ -8,8 +8,7 @@ set -euo pipefail
 
 TERRAFORM_VERSION="${TERRAFORM_VERSION:-1.8.5}"
 TERRAFORM_ENFORCE_VERSION="${TERRAFORM_ENFORCE_VERSION:-false}"
-GOOGLE_CREDS_PATH="${GOOGLE_CREDS_PATH:-}"
-MANAGED_GOOGLE_CREDS_PATH=""
+GOOGLE_CREDS_PATH="${GOOGLE_CREDS_PATH:-/tmp/gcp-terraform-sa.json}"
 
 log() {
   printf '[codex-setup] %s\n' "$*"
@@ -95,23 +94,10 @@ write_google_credentials() {
     return 1
   fi
 
-  cleanup_managed_google_credentials() {
-    if [[ -n "${MANAGED_GOOGLE_CREDS_PATH}" && -f "${MANAGED_GOOGLE_CREDS_PATH}" ]]; then
-      rm -f "${MANAGED_GOOGLE_CREDS_PATH}"
-      log "deleted managed temporary credentials file: ${MANAGED_GOOGLE_CREDS_PATH}"
-    fi
-  }
-
   local creds_path
-  if [[ -n "${GOOGLE_CREDS_PATH}" ]]; then
-    creds_path="${GOOGLE_CREDS_PATH}"
-    log "using explicit GOOGLE_CREDS_PATH: ${creds_path}"
-  else
-    creds_path="$(mktemp /tmp/gcp-terraform-sa.XXXXXX.json)"
-    MANAGED_GOOGLE_CREDS_PATH="${creds_path}"
-    trap cleanup_managed_google_credentials EXIT
-    log "using managed temporary credentials path: ${creds_path}"
-  fi
+  creds_path="${GOOGLE_CREDS_PATH}"
+  mkdir -p "$(dirname "${creds_path}")"
+  log "using credentials path: ${creds_path}"
 
   umask 077
   printf '%s' "${GOOGLE_APPLICATION_CREDENTIALS_JSON}" > "${creds_path}"
