@@ -1,7 +1,21 @@
-account_id = "your-cloudflare-account-id"
-zone_id    = "your-cloudflare-zone-id"
-zone_name  = "example.com"
+account_id  = "your-cloudflare-account-id"
+zone_id     = "your-cloudflare-zone-id"
+zone_name   = "example.com"
+project_id  = "your-gcp-project-id"
 
-# Optional overrides:
+# Optional Cloudflare overrides:
 # miniflux_hostname    = "rss"
 # miniflux_tunnel_name = "miniflux-tunnel"
+
+# Optional GCP overrides:
+# region             = "us-west1"
+# zone               = "us-west1-b"
+# machine_type       = "e2-micro"
+# boot_image         = "projects/debian-cloud/global/images/family/debian-12"
+# boot_disk_size_gb  = 20
+# boot_disk_type     = "pd-balanced"
+# data_disk_size_gb  = 20
+# data_disk_type     = "pd-standard"
+# assign_public_ip   = false
+# create_static_ipv4 = false
+# public_ingress_cidrs = ["203.0.113.10/32"]
