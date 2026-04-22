@@ -11,7 +11,7 @@ resource "google_compute_disk" "docker_data" {
 }
 
 resource "google_compute_address" "miniflux_ipv4" {
-  count        = var.create_static_ipv4 ? 1 : 0
+  count        = var.assign_public_ip && var.create_static_ipv4 ? 1 : 0
   name         = "miniflux-ipv4"
   address_type = "EXTERNAL"
   region       = var.region
