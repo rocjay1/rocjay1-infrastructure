@@ -9,6 +9,11 @@ variable "account_id" {
   type        = string
 }
 
+variable "account_name" {
+  description = "Cloudflare account name."
+  type        = string
+}
+
 variable "zone_id" {
   description = "Cloudflare zone ID."
   type        = string

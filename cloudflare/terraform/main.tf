@@ -1,5 +1,14 @@
-data "cloudflare_account" "main" {
-  account_id = var.account_id
+import {
+  to = cloudflare_account.main
+  id = var.account_id
+}
+
+resource "cloudflare_account" "main" {
+  name = var.account_name
+
+  settings = {
+    enforce_twofactor = true
+  }
 }
 
 data "cloudflare_zone" "main" {
@@ -12,6 +21,41 @@ resource "cloudflare_zone_dnssec" "main_zone_dnssec" {
   dnssec_presigned    = false
   dnssec_use_nsec3    = false
   status              = "active"
+}
+
+resource "cloudflare_zone_setting" "always_use_https" {
+  zone_id    = var.zone_id
+  setting_id = "always_use_https"
+  value      = "on"
+}
+
+resource "cloudflare_zone_setting" "ssl_strict" {
+  zone_id    = var.zone_id
+  setting_id = "ssl"
+  value      = "strict"
+}
+
+resource "cloudflare_zone_setting" "hsts" {
+  zone_id    = var.zone_id
+  setting_id = "security_header"
+
+  value = jsonencode({
+    strict_transport_security = {
+      enabled            = true
+      max_age            = 31536000
+      include_subdomains = true
+      preload            = true
+      nosniff            = true
+    }
+  })
+}
+
+resource "cloudflare_turnstile_widget" "main" {
+  account_id = var.account_id
+  name       = "Managed Turnstile Widget"
+  domains    = [var.zone_name, "rss.${var.zone_name}"]
+  mode       = "managed"
+  region     = "world"
 }
 
 resource "cloudflare_ruleset" "geoblock" {

@@ -4,7 +4,7 @@ This document defines the repeatable workflow Codex should follow when working w
 
 ## Standard workflow
 1. Navigate to the correct workspace:
-   - Example: `balance-tracker/terraform`
+   - Example: `miniflux/terraform`
 
 2. Format and validate:
    ```bash
@@ -53,7 +53,6 @@ This document defines the repeatable workflow Codex should follow when working w
 
 ## When modifying modules
 - Check all consumers under:
-  - `balance-tracker/terraform`
   - `miniflux/terraform`
 - Call out breaking changes explicitly
 
