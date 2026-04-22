@@ -20,11 +20,6 @@ Located in the `terraform/` directory, this provisions the Cloudflare Tunnel (`m
 - Required non-secret variables: `account_id`, `zone_id`, and `zone_name` (see `terraform/terraform.tfvars.example`)
 - Access to the target GCS bucket for remote state.
 
-
-### Codex Web Setup
-
-For a non-interactive Codex Web environment (Terraform + credentials bootstrap), see [`terraform/CODEX_WEB_RUNBOOK.md`](terraform/CODEX_WEB_RUNBOOK.md).
-
 ### Usage (Terraform)
 
 ```bash
@@ -111,4 +106,4 @@ For the Raspberry Pi to Google Cloud migration procedure, see [`MIGRATION_GCP.md
 
 ### Ansible Roles & Tasks
 
-This deployment uses the shared **`pi_baseline`** Ansible role located at the root of the repository (`../ansible/roles/pi_baseline/`). This role provisions standard host security (UFW, SSH hardening), installs Docker Engine, and configures routine maintenance and log rotation on Raspberry Pi and Debian-based Google Cloud targets.
+This deployment uses the shared **`debian_docker_host`** Ansible role located at the root of the repository (`../ansible/roles/debian_docker_host/`). This role provisions standard host security (UFW, SSH hardening), installs Docker Engine, and configures routine maintenance and log rotation on Debian-based targets.

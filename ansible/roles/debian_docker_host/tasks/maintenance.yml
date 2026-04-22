@@ -1,25 +1,11 @@
 ---
-# System Monitoring and Cron Maintenance
-
-- name: Install Node Exporter for metrics
-  ansible.builtin.apt:
-    name: prometheus-node-exporter
-    state: present
-
-- name: Start and enable Node Exporter
-  ansible.builtin.systemd:
-    name: prometheus-node-exporter
-    state: started
-    enabled: yes
-
-
 - name: Set up weekly Docker system prune
   ansible.builtin.cron:
     name: "Docker Weekly System Prune"
     minute: "0"
     hour: "3"
-    weekday: "0" # Sunday at 3:00 AM
-    job: "docker system prune -af --volumes >> /var/log/docker-prune.log 2>&1"
+    weekday: "0"
+    job: "docker system prune -af >> /var/log/docker-prune.log 2>&1"
     user: root
 
 - name: Check if a reboot is required due to updates

@@ -1,6 +1,4 @@
 ---
-# Docker Engine Lifecycle
-
 - name: Install dependencies for Docker
   ansible.builtin.apt:
     name:
@@ -55,7 +53,7 @@
     groups: docker
     append: yes
 
-- name: Configure Docker daemon JSON (Log Rotation)
+- name: Configure Docker daemon JSON
   ansible.builtin.copy:
     dest: /etc/docker/daemon.json
     content: |

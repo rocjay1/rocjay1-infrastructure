@@ -1,12 +1,10 @@
 ---
-# Host Security and Hardening Tasks
-
 - name: Update apt cache
   ansible.builtin.apt:
     update_cache: yes
     cache_valid_time: 3600
 
-- name: Install Uncomplicated Firewall (UFW)
+- name: Install Uncomplicated Firewall
   ansible.builtin.apt:
     name: ufw
     state: present
@@ -23,24 +21,6 @@
   community.general.ufw:
     rule: allow
     name: OpenSSH
-
-- name: Allow Prometheus through UFW
-  community.general.ufw:
-    rule: allow
-    port: '9090'
-    proto: tcp
-
-- name: Allow Node Exporter through UFW
-  community.general.ufw:
-    rule: allow
-    port: '9100'
-    proto: tcp
-
-- name: Allow Grafana through UFW
-  community.general.ufw:
-    rule: allow
-    port: '3000'
-    proto: tcp
 
 - name: Enable UFW
   community.general.ufw:

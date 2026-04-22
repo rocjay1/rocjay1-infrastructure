@@ -288,4 +288,4 @@ Operational risks:
 
 - Running Pi and GCP Cloudflare Tunnel connectors at the same time can route requests to either host.
 - A failed database restore should be rolled back before stopping the Pi tunnel.
-- Changing the shared `pi_baseline` role affects other playbooks using that role; the Docker repository architecture change is intended to preserve ARM64 behavior and add AMD64 support.
+- Changing the shared `debian_docker_host` role affects other playbooks using that role; the Docker repository architecture change is intended to preserve ARM64 behavior and add AMD64 support.

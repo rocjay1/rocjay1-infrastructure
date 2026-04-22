@@ -65,7 +65,7 @@
       when: miniflux_target == "gcp"
 
   roles:
-    - pi_baseline
+    - debian_docker_host
 
   tasks:
     - name: Reset SSH connection after baseline user changes

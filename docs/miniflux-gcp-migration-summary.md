@@ -56,7 +56,7 @@ jasonroc19_gmail_com
 
 The playbook now mounts the attached GCP disk at `/var/lib/docker` before Docker installation and resets the SSH connection after adding the user to the `docker` group.
 
-The shared `pi_baseline` Docker role now supports both ARM64 and AMD64 Debian hosts by deriving the Docker apt repository architecture from `ansible_architecture`.
+The shared `debian_docker_host` role supports both ARM64 and AMD64 Debian hosts by deriving the Docker apt repository architecture from `ansible_architecture`.
 
 ## Migration Validation
 
