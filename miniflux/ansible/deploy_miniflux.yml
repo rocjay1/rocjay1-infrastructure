@@ -5,6 +5,8 @@
 
   vars:
     project_root: "/opt/miniflux"
+    docker_data_device: "/dev/disk/by-id/google-docker-data"
+    docker_data_mount: "/var/lib/docker"
     # Fallback to empty if not provided via extra vars or interactive prompt
     tunnel_token: "{{ vault_tunnel_token | default('set_token_in_vault') }}"
     db_password: "{{ vault_db_password | default('set_db_password_in_vault') }}"
@@ -24,10 +26,51 @@
         file: vars/vault.yml
       when: vault_file.stat.exists
 
+    - name: Install filesystem tools for persistent Docker disk
+      ansible.builtin.apt:
+        name: e2fsprogs
+        state: present
+        update_cache: yes
+      when: miniflux_target == "gcp"
+
+    - name: Check Docker data disk filesystem
+      ansible.builtin.command: "blkid {{ docker_data_device }}"
+      register: docker_data_blkid
+      changed_when: false
+      failed_when: false
+      when: miniflux_target == "gcp"
+
+    - name: Create ext4 filesystem on Docker data disk
+      ansible.builtin.command: "mkfs.ext4 -F {{ docker_data_device }}"
+      when:
+        - miniflux_target == "gcp"
+        - docker_data_blkid.rc != 0
+
+    - name: Ensure Docker data mountpoint exists
+      ansible.builtin.file:
+        path: "{{ docker_data_mount }}"
+        state: directory
+        owner: root
+        group: root
+        mode: '0711'
+      when: miniflux_target == "gcp"
+
+    - name: Mount Docker data disk
+      ansible.posix.mount:
+        path: "{{ docker_data_mount }}"
+        src: "{{ docker_data_device }}"
+        fstype: ext4
+        opts: defaults,nofail
+        state: mounted
+      when: miniflux_target == "gcp"
+
   roles:
     - pi_baseline
 
   tasks:
+    - name: Reset SSH connection after baseline user changes
+      ansible.builtin.meta: reset_connection
+
     - name: Ensure project directory exists
       ansible.builtin.file:
         path: "{{ project_root }}"

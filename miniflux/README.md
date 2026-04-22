@@ -1,17 +1,17 @@
 # Miniflux Infrastructure
 
-This workspace contains the infrastructure-as-code and configuration management for deploying the [Miniflux](https://miniflux.app/) RSS reader on a Raspberry Pi via a secure Cloudflare Tunnel.
+This workspace contains the infrastructure-as-code and configuration management for deploying the [Miniflux](https://miniflux.app/) RSS reader on a Raspberry Pi or a low-cost Google Cloud VM via a secure Cloudflare Tunnel.
 
 ## Structure
 
-- **[terraform](terraform/)**: Cloudflare DNS and Zero Trust Tunnel provisioning via Terraform.
+- **[terraform](terraform/)**: Cloudflare DNS, Zero Trust Tunnel, and Google Compute Engine provisioning via Terraform.
 - **[ansible](ansible/)**: Host configuration and Docker-based application deployment rules.
 
 ---
 
 ## Provisioning (Terraform)
 
-Located in the `terraform/` directory, this provisions the Cloudflare Tunnel (`miniflux-tunnel`) and assigns the CNAME mapping (e.g. `rss`).
+Located in the `terraform/` directory, this provisions the Cloudflare Tunnel (`miniflux-tunnel`), assigns the CNAME mapping (e.g. `rss`), and creates the Google Cloud VM and persistent Docker data disk.
 
 ### Requirements (Terraform)
 
@@ -29,17 +29,42 @@ For a non-interactive Codex Web environment (Terraform + credentials bootstrap),
 
 ```bash
 cd terraform
-terraform init
-terraform apply
+terraform fmt -recursive
+terraform init -input=false
+terraform validate
+terraform plan -input=false
 ```
 
-*Retrieve the tunnel token from your terraform state via `terraform output miniflux_tunnel_token`.*
+Apply only after reviewing the plan:
+
+```bash
+terraform apply -input=false
+```
+
+Retrieve the tunnel token from Terraform state:
+
+```bash
+terraform output -raw miniflux_tunnel_token
+```
+
+### Google Cloud Cost Guardrails
+
+This workspace is designed for a low-cost/free-tier-oriented deployment:
+
+- VM: one `e2-micro`
+- Zone: `us-west1-b`
+- Region: `us-west1`
+- Disks: `pd-standard`
+- External IPv4: disabled by default; enable an ephemeral external IPv4 only when no Cloud NAT or other egress path exists
+- Ingress: Cloudflare Tunnel only
+
+Do not enable NAT Gateway, Load Balancer, Cloud SQL, static external IPv4, larger disks, or non-standard disk classes unless accepting extra cost.
 
 ---
 
 ## Deployment (Ansible)
 
-Located in the `ansible/` directory. This manages the full lifecycle of the Miniflux application on your Raspberry Pi target.
+Located in the `ansible/` directory. This manages the full lifecycle of the Miniflux application on Raspberry Pi and Google Cloud targets.
 
 ### Architecture
 
@@ -48,7 +73,6 @@ The deployment consists of several Dockerized services:
 - **miniflux-db**: A PostgreSQL 16 container, which acts as the datastore for the RSS application.
 - **miniflux**: The golang-based RSS reader UI & API.
 - **tunnel**: A secure Cloudflared Tunnel container routing traffic out to Cloudflare.
-- **watchtower**: Automatically maintains up-to-date images for the Miniflux stack.
 
 ### Setup & Secrets
 
@@ -79,9 +103,12 @@ To provision the server and deploy the container stack:
 
 ```bash
 cd ansible
-ansible-playbook -i hosts.ini deploy_miniflux.yml
+ansible-playbook -i hosts.ini deploy_miniflux.yml --limit miniflux_pi
+ansible-playbook -i hosts.ini deploy_miniflux.yml --limit miniflux_gcp
 ```
+
+For the Raspberry Pi to Google Cloud migration procedure, see [`MIGRATION_GCP.md`](MIGRATION_GCP.md).
 
 ### Ansible Roles & Tasks
 
-This deployment uses the shared **`pi_baseline`** Ansible role located at the root of the repository (`../ansible/roles/pi_baseline/`). This role automatically provisions standard host security (UFW, SSH hardening), installs required Docker engines, and configures routine maintenance and log rotation on the Raspberry Pi target.
+This deployment uses the shared **`pi_baseline`** Ansible role located at the root of the repository (`../ansible/roles/pi_baseline/`). This role provisions standard host security (UFW, SSH hardening), installs Docker Engine, and configures routine maintenance and log rotation on Raspberry Pi and Debian-based Google Cloud targets.

@@ -1,8 +1,10 @@
 locals {
   miniflux_required_project_roles = [
-    "roles/compute.admin",
+    "roles/compute.instanceAdmin.v1",
+    "roles/compute.networkAdmin",
+    "roles/iam.serviceAccountAdmin",
     "roles/iam.serviceAccountUser",
-    "roles/secretmanager.admin",
+    "roles/serviceusage.serviceUsageAdmin",
     "roles/storage.objectAdmin",
   ]
 }

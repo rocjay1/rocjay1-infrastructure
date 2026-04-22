@@ -13,9 +13,11 @@ project_id  = "your-gcp-project-id"
 # machine_type       = "e2-micro"
 # boot_image         = "projects/debian-cloud/global/images/family/debian-12"
 # boot_disk_size_gb  = 20
-# boot_disk_type     = "pd-balanced"
-# data_disk_size_gb  = 20
+# boot_disk_type     = "pd-standard"
+# data_disk_size_gb  = 10
 # data_disk_type     = "pd-standard"
+# Set assign_public_ip=true if this VM does not have another egress path such as Cloud NAT.
+# This attaches an ephemeral external IPv4 for outbound internet access.
 # assign_public_ip   = false
 # create_static_ipv4 = false
 # public_ingress_cidrs = ["203.0.113.10/32"]

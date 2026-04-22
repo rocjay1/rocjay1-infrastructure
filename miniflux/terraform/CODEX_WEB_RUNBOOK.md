@@ -34,13 +34,18 @@ Do not store credentials in tracked files or `terraform.tfvars`.
 
 The Terraform service account should have at least:
 
-- `roles/compute.admin`
+- `roles/compute.instanceAdmin.v1`
+- `roles/compute.networkAdmin`
+- `roles/iam.serviceAccountAdmin`
 - `roles/iam.serviceAccountUser`
+- `roles/serviceusage.serviceUsageAdmin`
 - `roles/storage.objectAdmin` (for GCS state backend)
 
 Optional if managing secrets via Terraform:
 
 - `roles/secretmanager.admin`
+
+Prefer Application Default Credentials or Workload Identity Federation where available. JSON key auth remains supported by this runbook for non-interactive Codex Web environments, but long-lived keys should be rotated after use and restricted to the minimum set of secret accessors.
 
 ## 4) Startup behavior
 
