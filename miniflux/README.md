@@ -102,7 +102,7 @@ ansible-playbook -i hosts.ini deploy_miniflux.yml --limit miniflux_pi
 ansible-playbook -i hosts.ini deploy_miniflux.yml --limit miniflux_gcp
 ```
 
-For the Raspberry Pi to Google Cloud migration procedure, see [`MIGRATION_GCP.md`](MIGRATION_GCP.md).
+For migration history and remaining Raspberry Pi decommission steps, see [`../docs/miniflux-gcp-migration.md`](../docs/miniflux-gcp-migration.md).
 
 ### Ansible Roles & Tasks
 

@@ -41,10 +41,13 @@
 
 ### `miniflux/terraform`
 - Uses the shared `terraform/modules/cloudflare_tunnel_app` module.
-- Focus is Cloudflare tunnel and DNS provisioning.
+- Provisions the Miniflux Cloudflare Tunnel, DNS, GCP VM, persistent disk, runtime service account, and firewall rules.
+- Keep free-tier guardrails intact unless the user explicitly accepts additional cost.
+- Do not remove the `miniflux-runtime` VM service account; it is separate from the removed Codex automation service account.
 
 ### `ansible/`
 - Ansible is used for host configuration and Docker-based deployment.
+- Shared Docker host setup lives in `ansible/roles/debian_docker_host`.
 - Do not modify encrypted vault files unless the task explicitly requires it.
 - Do not print, copy, or transform secret values from vault material.
 
