@@ -1,0 +1,37 @@
+name: Ansible Validate
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+jobs:
+  ansible:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: miniflux/ansible
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Ansible tooling
+        run: |
+          python -m pip install --upgrade pip
+          pip install ansible ansible-lint
+
+      - name: Install Ansible collections
+        run: ansible-galaxy collection install -r requirements.yml
+
+      - name: Syntax check
+        run: ansible-playbook -i hosts.ini deploy_miniflux.yml --syntax-check
+
+      - name: Ansible lint
+        run: ansible-lint deploy_miniflux.yml ../../ansible/roles/debian_docker_host
