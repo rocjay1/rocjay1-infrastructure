@@ -79,6 +79,18 @@ resource "google_compute_instance" "miniflux" {
     enable-oslogin = "TRUE"
   }
 
+  lifecycle {
+    precondition {
+      condition     = !var.create_static_ipv4 || var.assign_public_ip
+      error_message = "create_static_ipv4 requires assign_public_ip=true."
+    }
+
+    precondition {
+      condition     = var.assign_public_ip || length(var.public_ingress_cidrs) == 0
+      error_message = "public_ingress_cidrs must be empty unless assign_public_ip=true."
+    }
+  }
+
   depends_on = [google_project_service.compute]
 }
 

@@ -129,20 +129,10 @@ variable "create_static_ipv4" {
   description = "Whether to reserve and attach a static external IPv4 address. Requires assign_public_ip=true."
   type        = bool
   default     = false
-
-  validation {
-    condition     = !var.create_static_ipv4 || var.assign_public_ip
-    error_message = "create_static_ipv4 requires assign_public_ip=true."
-  }
 }
 
 variable "public_ingress_cidrs" {
   description = "Allowed source CIDRs for SSH ingress when assign_public_ip is enabled."
   type        = list(string)
   default     = []
-
-  validation {
-    condition     = var.assign_public_ip || length(var.public_ingress_cidrs) == 0
-    error_message = "public_ingress_cidrs must be empty unless assign_public_ip=true."
-  }
 }
