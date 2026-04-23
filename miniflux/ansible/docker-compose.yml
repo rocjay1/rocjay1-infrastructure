@@ -1,6 +1,6 @@
 services:
   miniflux-db:
-    image: postgres:16-alpine
+    image: postgres:16.13-alpine
     container_name: miniflux-db
     environment:
       - POSTGRES_USER=miniflux
@@ -18,7 +18,7 @@ services:
     restart: unless-stopped
 
   miniflux:
-    image: miniflux/miniflux:latest
+    image: miniflux/miniflux:2.2.19
     container_name: miniflux
     depends_on:
       miniflux-db:
@@ -32,11 +32,9 @@ services:
     networks:
       - tunnel-net
     restart: unless-stopped
-    labels:
-      - "com.centurylinklabs.watchtower.enable=true"
 
   tunnel:
-    image: cloudflare/cloudflared:latest
+    image: cloudflare/cloudflared:2026.3.0
     container_name: miniflux-tunnel
     restart: unless-stopped
     command: tunnel run

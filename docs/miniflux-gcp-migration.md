@@ -40,6 +40,8 @@ The `miniflux/terraform` workspace manages:
 
 The VM currently uses an ephemeral external IPv4 because the project does not have Cloud NAT. Public application traffic still enters only through Cloudflare Tunnel; Docker Compose does not publish Miniflux ports.
 
+The Terraform-managed egress firewall allows DNS and HTTPS for the `miniflux` VM tag, but it is not a strict egress boundary while the default VPC's broad allow-egress rule exists. Treat it as documentation of expected outbound traffic unless a higher-priority deny-all egress rule is added and tested.
+
 The `miniflux/ansible` workspace deploys:
 
 - `miniflux-db`: PostgreSQL 16.
@@ -297,6 +299,8 @@ Designed low-cost defaults:
 
 For a VM without Cloud NAT, use `assign_public_ip = true` and keep `create_static_ipv4 = false`. This attaches an ephemeral external IPv4 for outbound internet access without adding a public app listener. Terraform allows IAP SSH from `35.235.240.0/20` and adds a higher-priority deny rule for public SSH so default VPC SSH rules do not expose this VM.
 
+The `miniflux-egress` firewall rule documents expected outbound DNS and HTTPS, but default VPC egress rules may still allow broader outbound traffic. Enforcing strict egress would require an explicit deny-all egress rule with carefully tested allows for apt, Docker pulls, Miniflux feed fetching, and Cloudflare Tunnel connectivity.
+
 Potential cost sources:
 
 - Static or ephemeral external IPv4 addresses.
@@ -311,7 +315,6 @@ Recommended follow-ups:
 
 - Add scheduled PostgreSQL backups on the GCP VM.
 - Consider short-retention GCE disk snapshots if the added cost is acceptable.
-- Pin Docker image versions instead of using `latest`.
 - Add an Ansible healthcheck task after Docker Compose deployment.
 - Review the ephemeral external IPv4 cost after the first billing cycle.
 - Consider Cloud NAT only if the external IPv4 model becomes operationally or financially undesirable.
