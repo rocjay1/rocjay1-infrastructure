@@ -1,7 +1,7 @@
 ---
 - name: Update apt cache
   ansible.builtin.apt:
-    update_cache: yes
+    update_cache: true
     cache_valid_time: 3600
 
 - name: Install Uncomplicated Firewall
@@ -9,13 +9,15 @@
     name: ufw
     state: present
 
-- name: Set UFW default deny incoming, allow outgoing
+- name: Set UFW default deny incoming
   community.general.ufw:
-    direction: "{{ item.dir }}"
-    policy: "{{ item.pol }}"
-  loop:
-    - { dir: 'incoming', pol: 'deny' }
-    - { dir: 'outgoing', pol: 'allow' }
+    direction: incoming
+    policy: deny
+
+- name: Set UFW default allow outgoing
+  community.general.ufw:
+    direction: outgoing
+    policy: allow
 
 - name: Allow SSH through UFW
   community.general.ufw:
@@ -26,7 +28,7 @@
   community.general.ufw:
     state: enabled
     logging: 'on'
-  notify: restart docker
+  notify: Restart docker
 
 - name: Install unattended-upgrades
   ansible.builtin.apt:
@@ -48,11 +50,11 @@
     path: /etc/ssh/sshd_config
     regexp: '^#?PasswordAuthentication'
     line: 'PasswordAuthentication no'
-  notify: restart ssh
+  notify: Restart ssh
 
 - name: Disable SSH root login
   ansible.builtin.lineinfile:
     path: /etc/ssh/sshd_config
     regexp: '^#?PermitRootLogin'
     line: 'PermitRootLogin no'
-  notify: restart ssh
+  notify: Restart ssh

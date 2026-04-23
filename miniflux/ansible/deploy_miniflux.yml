@@ -1,7 +1,7 @@
 ---
 - name: Deploy Miniflux
   hosts: miniflux_vm
-  become: yes
+  become: true
 
   vars:
     project_root: "/opt/miniflux"
@@ -19,7 +19,7 @@
         path: vars/vault.yml
       register: vault_file
       delegate_to: localhost
-      become: no
+      become: false
 
     - name: Load vault variables
       ansible.builtin.include_vars:
@@ -30,7 +30,7 @@
       ansible.builtin.apt:
         name: e2fsprogs
         state: present
-        update_cache: yes
+        update_cache: true
       when: miniflux_target == "gcp"
 
     - name: Check Docker data disk filesystem
@@ -42,6 +42,7 @@
 
     - name: Create ext4 filesystem on Docker data disk
       ansible.builtin.command: "mkfs.ext4 -F {{ docker_data_device }}"
+      changed_when: true
       when:
         - miniflux_target == "gcp"
         - docker_data_blkid.rc != 0
@@ -103,12 +104,12 @@
         project_src: "{{ project_root }}"
         pull: always
         state: present
-        remove_orphans: yes
-      become: no
+        remove_orphans: true
+      become: false
 
     - name: Prune old Docker images
       community.docker.docker_prune:
-        images: yes
+        images: true
         images_filters:
           dangling: false
-      become: no
+      become: false
