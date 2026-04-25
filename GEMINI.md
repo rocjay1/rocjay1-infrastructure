@@ -49,6 +49,7 @@
 
 - Uses the shared `terraform/modules/cloudflare_tunnel_app` module.
 - Provisions the Miniflux Cloudflare Tunnel, DNS, GCP VM, persistent disk, runtime service account, and firewall rules.
+- Provisions GCP observability resources (Uptime Checks, Alert Policies) when `alert_email` is provided.
 - Keep free-tier guardrails intact unless the user explicitly accepts additional cost.
 - Do not remove the `miniflux-runtime` VM service account; it is separate from the removed Codex automation service account.
 
@@ -56,6 +57,7 @@
 
 - Ansible is used for host configuration and Docker-based deployment.
 - Shared Docker host setup lives in `ansible/roles/debian_docker_host`.
+- For GCP targets, Docker uses the `gcplogs` driver and the Google Cloud Ops Agent is required for full observability.
 - Do not modify encrypted vault files unless the task explicitly requires it.
 - Do not print, copy, or transform secret values from vault material.
 

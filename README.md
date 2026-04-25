@@ -11,6 +11,7 @@ The repository is organized into workspaces for different applications and share
 - **[feed-aggregator](feed-aggregator/)**: Infrastructure provisioning for the Feed Aggregator project.
 - **[miniflux](miniflux/)**: Infrastructure and deployment logic for the Miniflux RSS reader, utilizing Terraform for Cloudflare Tunnels and Ansible for container orchestration.
 - **[terraform/modules](terraform/modules/)**: Shared Terraform modules (e.g., `cloudflare_tunnel_app`) reusable across application workspaces.
+- **[GEMINI.md](GEMINI.md)**: Agent instructions and repository-wide standards for AI assistants working in this codebase.
 
 ## Technologies Used
 

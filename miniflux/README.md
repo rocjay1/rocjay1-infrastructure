@@ -17,7 +17,7 @@ Located in the `terraform/` directory, this provisions the Cloudflare Tunnel (`m
 
 - Terraform CLI
 - Cloudflare API Token (set via `CLOUDFLARE_API_TOKEN` or `terraform.tfvars`)
-- Required non-secret variables: `account_id`, `zone_id`, and `zone_name` (see `terraform/terraform.tfvars.example`)
+- Required non-secret variables: `account_id`, `zone_id`, `zone_name`, and optionally `alert_email` (see `terraform/terraform.tfvars.example`)
 - Access to the target GCS bucket for remote state.
 
 ### Usage (Terraform)
@@ -106,4 +106,15 @@ For migration history and remaining Raspberry Pi decommission steps, see [`../do
 
 ### Ansible Roles & Tasks
 
-This deployment uses the shared **`debian_docker_host`** Ansible role located at the root of the repository (`../ansible/roles/debian_docker_host/`). This role provisions standard host security (UFW, SSH hardening), installs Docker Engine, and configures routine maintenance and log rotation on Debian-based targets.
+This deployment uses the shared **`debian_docker_host`** Ansible role located at the root of the repository (`../ansible/roles/debian_docker_host/`). This role provisions standard host security (UFW, SSH hardening), installs Docker Engine, and configures routine maintenance on Debian-based targets.
+
+---
+
+## Observability & Monitoring (GCP only)
+
+For GCP-based deployments, this workspace implements automated observability:
+
+- **Logging**: Docker is configured to use the `gcplogs` driver, routing all container logs directly to Google Cloud Logging.
+- **Ops Agent**: The Google Cloud Ops Agent is automatically installed and configured on the VM to collect system and application metrics.
+- **Uptime Monitoring**: Terraform provisions a Cloud Monitoring Uptime Check to verify the availability of the Miniflux service.
+- **Alerting**: A Monitoring Alert Policy is created to notify when the service is down. To receive email notifications, set the `alert_email` variable in your Terraform configuration.
