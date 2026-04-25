@@ -1,0 +1,17 @@
+---
+- name: Download Google Cloud Ops Agent setup script
+  ansible.builtin.get_url:
+    url: https://dl.google.com/cloudagents/add-google-cloud-ops-agent-repo.sh
+    dest: /tmp/add-google-cloud-ops-agent-repo.sh
+    mode: '0755'
+
+- name: Execute Ops Agent setup script
+  ansible.builtin.command: bash /tmp/add-google-cloud-ops-agent-repo.sh --also-install
+  args:
+    creates: /etc/google-cloud-ops-agent/config.yaml
+
+- name: Ensure Google Cloud Ops Agent is started and enabled
+  ansible.builtin.systemd:
+    name: google-cloud-ops-agent
+    state: started
+    enabled: true

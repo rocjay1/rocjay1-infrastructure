@@ -60,11 +60,7 @@
     dest: /etc/docker/daemon.json
     content: |
       {
-        "log-driver": "json-file",
-        "log-opts": {
-          "max-size": "10m",
-          "max-file": "3"
-        }
+        "log-driver": "gcplogs"
       }
     owner: root
     group: root

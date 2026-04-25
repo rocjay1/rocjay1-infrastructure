@@ -136,3 +136,9 @@ variable "public_ingress_cidrs" {
   type        = list(string)
   default     = []
 }
+
+variable "alert_email" {
+  description = "Email address for monitoring alert notifications. If empty, alerts will be created but without a notification channel."
+  type        = string
+  default     = ""
+}

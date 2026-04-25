@@ -21,3 +21,6 @@ project_id  = "your-gcp-project-id"
 # assign_public_ip   = false
 # create_static_ipv4 = false
 # public_ingress_cidrs = ["203.0.113.10/32"]
+
+# Email for GCP Uptime checks and alerts
+# alert_email = "alerts@example.com"
