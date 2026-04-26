@@ -7,7 +7,7 @@
 
 - name: Install Google Cloud Ops Agent (GCP only)
   ansible.builtin.include_tasks: ops_agent.yml
-  when: miniflux_target | default('') == 'gcp'
+  when: debian_docker_host_is_gcp | default(false)
 
 - name: Include host maintenance tasks
   ansible.builtin.import_tasks: maintenance.yml

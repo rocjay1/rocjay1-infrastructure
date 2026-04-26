@@ -58,14 +58,14 @@
 - name: Configure Docker daemon JSON
   ansible.builtin.copy:
     dest: /etc/docker/daemon.json
-    content: |
-      {
-        "log-driver": "gcplogs"
-      }
+    content: "{{ docker_daemon_config | to_nice_json }}\n"
     owner: root
     group: root
     mode: '0644'
   notify: Restart docker
+
+- name: Flush handlers to apply Docker daemon changes
+  ansible.builtin.meta: flush_handlers
 
 - name: Start and enable Docker service
   ansible.builtin.systemd:

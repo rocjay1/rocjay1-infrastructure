@@ -1,0 +1,5 @@
+---
+# GCP-specific Docker daemon configuration
+docker_daemon_config:
+  log-driver: "gcplogs"
+debian_docker_host_is_gcp: true
