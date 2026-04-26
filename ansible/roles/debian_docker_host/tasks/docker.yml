@@ -58,7 +58,7 @@
 - name: Configure Docker daemon JSON
   ansible.builtin.copy:
     dest: /etc/docker/daemon.json
-    content: "{{ docker_daemon_config | to_nice_json }}\n"
+    content: "{{ debian_docker_host_docker_daemon_config | to_nice_json }}\n"
     owner: root
     group: root
     mode: '0644'

@@ -1,6 +1,6 @@
 ---
 # Default Docker daemon configuration (suitable for Raspberry Pi / standard Debian)
-docker_daemon_config:
+debian_docker_host_docker_daemon_config:
   log-driver: "json-file"
   log-opts:
     max-size: "10m"
