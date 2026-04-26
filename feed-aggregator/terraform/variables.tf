@@ -20,3 +20,19 @@ variable "github_repo" {
   type        = string
   default     = "rocjay1/feed-aggregator"
 }
+
+variable "zone_id" {
+  description = "Cloudflare zone ID."
+  type        = string
+}
+
+variable "zone_name" {
+  description = "Cloudflare zone name."
+  type        = string
+}
+
+variable "subdomain" {
+  description = "Subdomain to host the pages on."
+  type        = string
+  default     = "feeds"
+}

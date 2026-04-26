@@ -42,3 +42,18 @@ resource "cloudflare_pages_project" "feed_aggregator" {
     }
   }
 }
+
+resource "cloudflare_pages_domain" "feed_aggregator_domain" {
+  account_id   = var.account_id
+  project_name = cloudflare_pages_project.feed_aggregator.name
+  name         = "${var.subdomain}.${var.zone_name}"
+}
+
+resource "cloudflare_dns_record" "feed_aggregator_cname" {
+  zone_id = var.zone_id
+  name    = var.subdomain
+  content = cloudflare_pages_project.feed_aggregator.subdomain
+  type    = "CNAME"
+  proxied = true
+  ttl     = 1
+}
