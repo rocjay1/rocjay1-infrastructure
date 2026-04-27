@@ -53,6 +53,14 @@
 - Keep free-tier guardrails intact unless the user explicitly accepts additional cost.
 - Do not remove the `miniflux-runtime` VM service account; it is separate from the removed Codex automation service account.
 
+### `feed-aggregator/terraform`
+
+- Provisions a Cloudflare-native architecture using Workers and R2.
+- Uses the Cloudflare v5 provider's granular Worker resources (`cloudflare_worker`, `cloudflare_worker_version`, `cloudflare_workers_deployment`).
+- Requires R2 to be enabled on the Cloudflare account.
+- Implements an hourly cron trigger and a custom domain mapping.
+- Ensure the worker is deployed before attempting to attach domains or triggers (managed via `depends_on`).
+
 ### `ansible/`
 
 - Ansible is used for host configuration and Docker-based deployment.

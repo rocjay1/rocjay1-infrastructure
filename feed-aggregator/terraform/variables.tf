@@ -1,5 +1,5 @@
 variable "cloudflare_api_token" {
-  description = "API token with permissions for Cloudflare Pages management."
+  description = "API token with permissions for Cloudflare management."
   type        = string
   sensitive   = true
 }
@@ -10,15 +10,9 @@ variable "account_id" {
 }
 
 variable "project_name" {
-  description = "The name of the Cloudflare Pages project."
+  description = "The name of the project."
   type        = string
   default     = "feed-aggregator"
-}
-
-variable "github_repo" {
-  description = "The GitHub repository for the Pages project."
-  type        = string
-  default     = "rocjay1/feed-aggregator"
 }
 
 variable "zone_id" {
@@ -32,7 +26,7 @@ variable "zone_name" {
 }
 
 variable "subdomain" {
-  description = "Subdomain to host the pages on."
+  description = "Subdomain to host the aggregator on."
   type        = string
   default     = "feeds"
 }
