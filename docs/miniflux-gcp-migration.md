@@ -35,6 +35,7 @@ The `miniflux/terraform` workspace manages:
 - Egress firewall for DNS and HTTPS.
 - IAP SSH ingress from `35.235.240.0/20`.
 - Public SSH deny rule for the `miniflux` VM tag.
+- Public RDP deny rule for the `miniflux` VM tag (silences noise from internet scans).
 - Optional ephemeral external IPv4 for outbound internet access.
 - Cloudflare Tunnel, tunnel config, and DNS CNAME.
 
@@ -292,12 +293,12 @@ Designed low-cost defaults:
 - `region = "us-west1"`
 - `zone = "us-west1-b"`
 - `machine_type = "e2-micro"`
-- `boot_disk_type = "pd-standard"`
-- `data_disk_type = "pd-standard"`
+- `boot_disk_type = "pd-standard"` (or `pd-balanced` for performance)
+- `data_disk_type = "pd-standard"` (or `pd-balanced` for performance)
 - `assign_public_ip = false`
 - `create_static_ipv4 = false`
 
-For a VM without Cloud NAT, use `assign_public_ip = true` and keep `create_static_ipv4 = false`. This attaches an ephemeral external IPv4 for outbound internet access without adding a public app listener. Terraform allows IAP SSH from `35.235.240.0/20` and adds a higher-priority deny rule for public SSH so default VPC SSH rules do not expose this VM.
+For a VM without Cloud NAT, use `assign_public_ip = true` and keep `create_static_ipv4 = false`. This attaches an ephemeral external IPv4 for outbound internet access without adding a public app listener. Terraform allows IAP SSH from `35.235.240.0/20` and adds higher-priority deny rules for public SSH and RDP so default VPC rules do not expose this VM or clutter system logs.
 
 The `miniflux-egress` firewall rule documents expected outbound DNS and HTTPS, but default VPC egress rules may still allow broader outbound traffic. Enforcing strict egress would require an explicit deny-all egress rule with carefully tested allows for apt, Docker pulls, Miniflux feed fetching, and Cloudflare Tunnel connectivity.
 

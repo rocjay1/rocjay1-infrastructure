@@ -49,11 +49,11 @@ This workspace is designed for a low-cost/free-tier-oriented deployment:
 - VM: one `e2-micro`
 - Zone: `us-west1-b`
 - Region: `us-west1`
-- Disks: `pd-standard`
+- Disks: `pd-standard` or `pd-balanced`
 - External IPv4: disabled by default; enable an ephemeral external IPv4 only when no Cloud NAT or other egress path exists
-- Ingress: Cloudflare Tunnel only
+- Ingress: Cloudflare Tunnel only (VPC-level deny rules for RDP/SSH are managed via Terraform)
 
-Do not enable NAT Gateway, Load Balancer, Cloud SQL, static external IPv4, larger disks, or non-standard disk classes unless accepting extra cost.
+Do not enable NAT Gateway, Load Balancer, Cloud SQL, static external IPv4, or larger disks unless accepting extra cost. `pd-balanced` is recommended for improved performance over `pd-standard` while remaining cost-effective.
 
 ---
 
@@ -115,6 +115,7 @@ This deployment uses the shared **`debian_docker_host`** Ansible role located at
 For GCP-based deployments, this workspace implements automated observability:
 
 - **Logging**: Docker is configured to use the `gcplogs` driver, routing all container logs directly to Google Cloud Logging.
+- **Security Logs**: GCP Firewall rules are configured to explicitly deny RDP (port 3389) and public SSH (port 22) to minimize noise and connection attempts in system logs (UFW).
 - **Ops Agent**: The Google Cloud Ops Agent is automatically installed and configured on the VM to collect system and application metrics.
 - **Uptime Monitoring**: Terraform provisions a Cloud Monitoring Uptime Check to verify the availability of the Miniflux service.
 - **Alerting**: A Monitoring Alert Policy is created to notify when the service is down. To receive email notifications, set the `alert_email` variable in your Terraform configuration.
