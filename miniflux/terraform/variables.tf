@@ -92,8 +92,8 @@ variable "boot_disk_type" {
   default     = "pd-standard"
 
   validation {
-    condition     = var.boot_disk_type == "pd-standard"
-    error_message = "Use pd-standard for the boot disk to keep costs low."
+    condition     = contains(["pd-standard", "pd-balanced", "pd-ssd"], var.boot_disk_type)
+    error_message = "Use a cost-effective disk type (pd-standard or pd-balanced) for the boot disk."
   }
 }
 
@@ -114,8 +114,8 @@ variable "data_disk_type" {
   default     = "pd-standard"
 
   validation {
-    condition     = var.data_disk_type == "pd-standard"
-    error_message = "Use pd-standard for the data disk to keep costs low."
+    condition     = contains(["pd-standard", "pd-balanced", "pd-ssd"], var.data_disk_type)
+    error_message = "Use a cost-effective disk type (pd-standard or pd-balanced) for the data disk."
   }
 }
 

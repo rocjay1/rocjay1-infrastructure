@@ -190,3 +190,25 @@ resource "google_compute_firewall" "miniflux_ingress" {
 
   depends_on = [google_project_service.compute]
 }
+
+resource "google_compute_firewall" "miniflux_deny_rdp" {
+  name      = "miniflux-deny-rdp"
+  network   = "default"
+  direction = "INGRESS"
+  priority  = 800
+
+  target_tags   = ["miniflux"]
+  source_ranges = ["0.0.0.0/0"]
+
+  deny {
+    protocol = "tcp"
+    ports    = ["3389"]
+  }
+
+  deny {
+    protocol = "udp"
+    ports    = ["3389"]
+  }
+
+  depends_on = [google_project_service.compute]
+}
