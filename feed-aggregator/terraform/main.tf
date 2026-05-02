@@ -1,3 +1,11 @@
+data "terraform_remote_state" "miniflux" {
+  backend = "gcs"
+  config = {
+    bucket = "daily-tech-brief-tfstate"
+    prefix = "miniflux"
+  }
+}
+
 # Cloudflare Worker (Identity)
 resource "cloudflare_worker" "feed_aggregator" {
   account_id = var.account_id

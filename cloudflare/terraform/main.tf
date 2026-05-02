@@ -58,19 +58,27 @@ resource "cloudflare_turnstile_widget" "main" {
   region     = "world"
 }
 
-resource "cloudflare_ruleset" "geoblock" {
+resource "cloudflare_ruleset" "main" {
   zone_id     = var.zone_id
   name        = "Geo Block"
-  description = "Block non-US traffic"
+  description = "Block non-US traffic and restrict feed aggregator"
   kind        = "zone"
   phase       = "http_request_firewall_custom"
 
-  rules = [{
-    action      = "block"
-    expression  = "(ip.src.country ne \"US\")"
-    description = "Block non-US traffic"
-    enabled     = true
-  }]
+  rules = [
+    {
+      action      = "block"
+      expression  = "(ip.src.country ne \"US\")"
+      description = "Block non-US traffic"
+      enabled     = true
+    },
+    {
+      action      = "block"
+      expression  = "(http.host eq \"feeds.${var.zone_name}\" and ip.src ne 8.231.239.219)"
+      description = "Block non-Miniflux traffic to feed aggregator"
+      enabled     = true
+    }
+  ]
 }
 
 # Identity Provider Setup (Entra ID)
