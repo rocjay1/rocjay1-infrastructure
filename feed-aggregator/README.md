@@ -17,10 +17,10 @@ The project has been migrated from Cloudflare Pages to a more flexible architect
 
 The Terraform configuration provisions:
 - `cloudflare_worker`: The worker identity.
-- `cloudflare_worker_version`: Code and environment configuration.
-- `cloudflare_workers_deployment`: Production deployment of the worker.
+- `cloudflare_workers_kv_namespace`: Storage for feed sources.
 - `cloudflare_workers_custom_domain`: Routing for the custom domain.
-- `cloudflare_workers_cron_trigger`: The hourly schedule.
+
+The `sources_kv_namespace_id` output provides the ID required for the `SOURCES_KV` binding in the application's `wrangler.toml`.
 
 Note: The WAF ruleset that enforces the IP lockdown is managed in the central `cloudflare/terraform` workspace to avoid ruleset limits.
 

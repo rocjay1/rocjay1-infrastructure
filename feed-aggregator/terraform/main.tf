@@ -32,3 +32,9 @@ resource "cloudflare_workers_custom_domain" "feed_aggregator_domain" {
     ]
   }
 }
+
+# KV Namespace for feed sources
+resource "cloudflare_workers_kv_namespace" "sources_kv" {
+  account_id = var.account_id
+  title      = "${var.project_name}-sources"
+}
