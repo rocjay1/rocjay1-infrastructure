@@ -7,7 +7,6 @@ This workspace manages the infrastructure for the Feed Aggregator project using 
 The project has been migrated from Cloudflare Pages to a more flexible architecture using:
 
 - **Cloudflare Workers**: Handles the aggregation logic and serves the feeds.
-- **Cloudflare R2**: Persistent storage for generated RSS feeds, HTML pages, and metadata.
 - **Cron Triggers**: Executes the worker on an hourly schedule (`0 * * * *`).
 - **Custom Domain**: Bound to `feeds.roccosmodernsite.net`.
 
@@ -16,9 +15,8 @@ The project has been migrated from Cloudflare Pages to a more flexible architect
 ### Terraform (`terraform/`)
 
 The Terraform configuration provisions:
-- `cloudflare_r2_bucket`: The storage bucket.
 - `cloudflare_worker`: The worker identity.
-- `cloudflare_worker_version`: Code and R2 bucket bindings.
+- `cloudflare_worker_version`: Code and environment configuration.
 - `cloudflare_workers_deployment`: Production deployment of the worker.
 - `cloudflare_workers_custom_domain`: Routing for the custom domain.
 - `cloudflare_workers_cron_trigger`: The hourly schedule.
@@ -26,8 +24,7 @@ The Terraform configuration provisions:
 ## Deployment
 
 1.  **Prerequisites**:
-    - Cloudflare API Token with `Account.Worker Scripts`, `Account.R2 Storage`, `Zone.Workers Routes`, and `Zone.DNS` permissions.
-    - R2 must be enabled in the Cloudflare Dashboard for the account.
+    - Cloudflare API Token with `Account.Worker Scripts`, `Zone.Workers Routes`, and `Zone.DNS` permissions.
 
 2.  **Workflow**:
     ```bash

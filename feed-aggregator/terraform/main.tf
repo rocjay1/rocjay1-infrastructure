@@ -1,9 +1,3 @@
-# R2 Bucket for storage
-resource "cloudflare_r2_bucket" "feed_storage" {
-  account_id = var.account_id
-  name       = "feed-storage"
-}
-
 # Cloudflare Worker (Identity)
 resource "cloudflare_worker" "feed_aggregator" {
   account_id = var.account_id
@@ -18,17 +12,38 @@ resource "cloudflare_worker_version" "feed_aggregator_v1" {
   main_module = "worker.js"
   modules = [{
     name         = "worker.js"
-    content_file = "${path.module}/worker.js"
+    content      = <<-EOT
+      export default {
+        async fetch(request, env) {
+          return new Response("Feed Aggregator Worker");
+        },
+        async scheduled(event, env, ctx) {
+          console.log("Cron trigger executed");
+        }
+      };
+    EOT
     content_type = "application/javascript+module"
   }]
 
   compatibility_date = "2024-01-01"
 
-  bindings = [{
-    name        = "FEED_STORAGE"
-    type        = "r2_bucket"
-    bucket_name = cloudflare_r2_bucket.feed_storage.name
-  }]
+  bindings = concat(
+    var.auth_username != "" ? [{
+      name = "AUTH_USERNAME"
+      type = "secret_text"
+      text = var.auth_username
+    }] : [],
+    var.auth_password != "" ? [{
+      name = "AUTH_PASSWORD"
+      type = "secret_text"
+      text = var.auth_password
+    }] : [],
+    var.youtube_api_key != "" ? [{
+      name = "YOUTUBE_API_KEY"
+      type = "secret_text"
+      text = var.youtube_api_key
+    }] : []
+  )
 }
 
 # Deploy the Worker Version
