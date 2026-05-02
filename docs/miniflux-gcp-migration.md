@@ -36,7 +36,8 @@ The `miniflux/terraform` workspace manages:
 - IAP SSH ingress from `35.235.240.0/20`.
 - Public SSH deny rule for the `miniflux` VM tag.
 - Public RDP deny rule for the `miniflux` VM tag (silences noise from internet scans).
-- Optional ephemeral external IPv4 for outbound internet access.
+- Optional ephemeral external IPv4 for outbound internet access (Legacy).
+- **Static External IPv4** (`8.231.239.219`) reserved for Feed Aggregator WAF lockdown.
 - Cloudflare Tunnel, tunnel config, and DNS CNAME.
 
 The VM currently uses an ephemeral external IPv4 because the project does not have Cloud NAT. Public application traffic still enters only through Cloudflare Tunnel; Docker Compose does not publish Miniflux ports.
@@ -295,10 +296,10 @@ Designed low-cost defaults:
 - `machine_type = "e2-micro"`
 - `boot_disk_type = "pd-standard"` (or `pd-balanced` for performance)
 - `data_disk_type = "pd-standard"` (or `pd-balanced` for performance)
-- `assign_public_ip = false`
-- `create_static_ipv4 = false`
+- `assign_public_ip = true`
+- `create_static_ipv4 = true`
 
-For a VM without Cloud NAT, use `assign_public_ip = true` and keep `create_static_ipv4 = false`. This attaches an ephemeral external IPv4 for outbound internet access without adding a public app listener. Terraform allows IAP SSH from `35.235.240.0/20` and adds higher-priority deny rules for public SSH and RDP so default VPC rules do not expose this VM or clutter system logs.
+A static external IPv4 is used to provide a stable source IP for the Feed Aggregator WAF lockdown. This is typically covered by the GCP "Always Free" tier for one in-use external IP in `us-west1`.
 
 The `miniflux-egress` firewall rule documents expected outbound DNS and HTTPS, but default VPC egress rules may still allow broader outbound traffic. Enforcing strict egress would require an explicit deny-all egress rule with carefully tested allows for apt, Docker pulls, Miniflux feed fetching, and Cloudflare Tunnel connectivity.
 

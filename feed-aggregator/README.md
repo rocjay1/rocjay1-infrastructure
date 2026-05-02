@@ -9,6 +9,7 @@ The project has been migrated from Cloudflare Pages to a more flexible architect
 - **Cloudflare Workers**: Handles the aggregation logic and serves the feeds.
 - **Cron Triggers**: Executes the worker on an hourly schedule (`0 * * * *`).
 - **Custom Domain**: Bound to `feeds.roccosmodernsite.net`.
+- **IP-Based Lockdown**: Ingress is restricted via Cloudflare WAF to the Miniflux VM's static IP address.
 
 ## Components
 
@@ -20,6 +21,13 @@ The Terraform configuration provisions:
 - `cloudflare_workers_deployment`: Production deployment of the worker.
 - `cloudflare_workers_custom_domain`: Routing for the custom domain.
 - `cloudflare_workers_cron_trigger`: The hourly schedule.
+
+Note: The WAF ruleset that enforces the IP lockdown is managed in the central `cloudflare/terraform` workspace to avoid ruleset limits.
+
+### Scripts (`scripts/`)
+
+- `update_miniflux_feeds.sh`: Sets basic authentication credentials for aggregator feeds in Miniflux (legacy).
+- `remove_miniflux_creds.sh`: Clears basic authentication credentials from aggregator feeds in Miniflux (preferred when WAF lockdown is active).
 
 ## Deployment
 

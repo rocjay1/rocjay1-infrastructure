@@ -49,6 +49,7 @@
 
 - Uses the shared `terraform/modules/cloudflare_tunnel_app` module.
 - Provisions the Miniflux Cloudflare Tunnel, DNS, GCP VM, persistent disk, runtime service account, and firewall rules.
+- **Uses a static external IPv4** (reserved in GCP) to provide a stable source IP for the Feed Aggregator WAF lockdown.
 - Provisions GCP observability resources (Uptime Checks, Alert Policies) when `alert_email` is provided.
 - Keep free-tier guardrails intact unless the user explicitly accepts additional cost.
 - Do not remove the `miniflux-runtime` VM service account; it is separate from the removed Codex automation service account.
@@ -57,6 +58,7 @@
 
 - Provisions a Cloudflare-native architecture using Workers and R2.
 - Uses the Cloudflare v5 provider's granular Worker resources (`cloudflare_worker`, `cloudflare_worker_version`, `cloudflare_workers_deployment`).
+- **Ingress is restricted via WAF** (managed in the `cloudflare/terraform` workspace) to the Miniflux VM's static IP.
 - Requires R2 to be enabled on the Cloudflare account.
 - Implements an hourly cron trigger and a custom domain mapping.
 - Ensure the worker is deployed before attempting to attach domains or triggers (managed via `depends_on`).

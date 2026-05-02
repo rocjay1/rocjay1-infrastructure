@@ -50,10 +50,10 @@ This workspace is designed for a low-cost/free-tier-oriented deployment:
 - Zone: `us-west1-b`
 - Region: `us-west1`
 - Disks: `pd-standard` or `pd-balanced`
-- External IPv4: disabled by default; enable an ephemeral external IPv4 only when no Cloud NAT or other egress path exists
+- **External IPv4**: A static external IPv4 is used to provide a stable source IP for the Feed Aggregator WAF lockdown. This is typically covered by the GCP "Always Free" tier for one in-use external IP in `us-west1`.
 - Ingress: Cloudflare Tunnel only (VPC-level deny rules for RDP/SSH are managed via Terraform)
 
-Do not enable NAT Gateway, Load Balancer, Cloud SQL, static external IPv4, or larger disks unless accepting extra cost. `pd-balanced` is recommended for improved performance over `pd-standard` while remaining cost-effective.
+Do not enable NAT Gateway, Load Balancer, Cloud SQL, or larger disks unless accepting extra cost. `pd-balanced` is recommended for improved performance over `pd-standard` while remaining cost-effective.
 
 ---
 
