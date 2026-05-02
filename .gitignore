@@ -16,9 +16,10 @@ terraform.rc
 
 # Ansible
 .vault_pass
+.ansible_tmp
 
 # Mac
 .DS_Store
 
-main.tf.bak
+# Secrets
 .env
