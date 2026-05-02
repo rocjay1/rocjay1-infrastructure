@@ -30,24 +30,3 @@ variable "subdomain" {
   type        = string
   default     = "feeds"
 }
-
-variable "auth_username" {
-  description = "Username for basic authentication."
-  type        = string
-  sensitive   = true
-  default     = ""
-}
-
-variable "auth_password" {
-  description = "Password for basic authentication."
-  type        = string
-  sensitive   = true
-  default     = ""
-}
-
-variable "youtube_api_key" {
-  description = "API key for YouTube data retrieval."
-  type        = string
-  sensitive   = true
-  default     = ""
-}
