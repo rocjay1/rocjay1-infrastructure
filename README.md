@@ -24,3 +24,7 @@ The repository is organized into workspaces for different applications and share
 ## Getting Started
 
 Each directory contains its own specific documentation and requirements. Refer to the `README.md` within each workspace for detailed instructions.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
