@@ -5,7 +5,7 @@
 - This repository is infrastructure-as-code for the Rocjay ecosystem.
 - Primary tools are Terraform and Ansible.
 - Shared Terraform modules live under `terraform/modules/`.
-- Application or service workspaces live under directories such as `cloudflare/`, `miniflux/`, and `feed-aggregator/`.
+- Application or service workspaces live under directories such as `cloudflare/`, `miniflux/`, and `flare-bridge/`.
 - Many workspaces use a `terraform/` subdirectory for provisioning and an `ansible/` subdirectory for host configuration and deployment.
 
 ## How to work in this repo
@@ -42,6 +42,7 @@
 ### `cloudflare/terraform`
 
 - This workspace provisions shared Cloudflare and Entra/Zero Trust resources.
+- Manages global WAF rules, including the FlareBridge IP lockdown, to avoid per-workspace ruleset limits.
 - Treat changes here as high impact because other workspaces may depend on its remote-state outputs.
 - Be conservative with identity provider, group, and access-policy changes.
 
@@ -49,17 +50,16 @@
 
 - Uses the shared `terraform/modules/cloudflare_tunnel_app` module.
 - Provisions the Miniflux Cloudflare Tunnel, DNS, GCP VM, persistent disk, runtime service account, and firewall rules.
-- **Uses a static external IPv4** (reserved in GCP) to provide a stable source IP for the Feed Aggregator WAF lockdown.
+- **Uses a static external IPv4** (reserved in GCP) to provide a stable source IP for the FlareBridge WAF lockdown.
 - Provisions GCP observability resources (Uptime Checks, Alert Policies) when `alert_email` is provided.
 - Keep free-tier guardrails intact unless the user explicitly accepts additional cost.
 - Do not remove the `miniflux-runtime` VM service account; it is separate from the removed Codex automation service account.
 
-### `feed-aggregator/terraform`
+### `flare-bridge/terraform`
 
-- Provisions a Cloudflare-native architecture using Workers and R2.
+- Provisions a Cloudflare-native architecture using Workers and D1.
 - Uses the Cloudflare v5 provider's granular Worker resources (`cloudflare_worker`, `cloudflare_worker_version`, `cloudflare_workers_deployment`).
 - **Ingress is restricted via WAF** (managed in the `cloudflare/terraform` workspace) to the Miniflux VM's static IP.
-- Requires R2 to be enabled on the Cloudflare account.
 - Implements an hourly cron trigger and a custom domain mapping.
 - Ensure the worker is deployed before attempting to attach domains or triggers (managed via `depends_on`).
 
