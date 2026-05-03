@@ -5,9 +5,5 @@
 - name: Include Docker Engine lifecycle tasks
   ansible.builtin.import_tasks: docker.yml
 
-- name: Install Google Cloud Ops Agent (GCP only)
-  ansible.builtin.include_tasks: ops_agent.yml
-  when: debian_docker_host_is_gcp | default(false)
-
 - name: Include host maintenance tasks
   ansible.builtin.import_tasks: maintenance.yml

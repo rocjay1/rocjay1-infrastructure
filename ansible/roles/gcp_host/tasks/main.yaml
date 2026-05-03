@@ -1,0 +1,3 @@
+---
+- name: Install Google Cloud Ops Agent
+  ansible.builtin.include_tasks: ops_agent.yml

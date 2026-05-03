@@ -1,5 +1,5 @@
 ---
-# Default Docker daemon configuration (suitable for Raspberry Pi / standard Debian)
+# Default Docker daemon configuration (suitable for standard Debian)
 debian_docker_host_docker_daemon_config:
   log-driver: "json-file"
   log-opts:
