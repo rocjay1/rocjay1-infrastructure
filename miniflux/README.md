@@ -1,6 +1,6 @@
 # Miniflux Infrastructure
 
-This workspace contains the infrastructure-as-code and configuration management for deploying the [Miniflux](https://miniflux.app/) RSS reader on a Raspberry Pi or a low-cost Google Cloud VM via a secure Cloudflare Tunnel.
+This workspace contains the infrastructure-as-code and configuration management for deploying the [Miniflux](https://miniflux.app/) RSS reader on a low-cost Google Cloud VM via a secure Cloudflare Tunnel.
 
 ## Structure
 
@@ -59,7 +59,7 @@ Do not enable NAT Gateway, Load Balancer, Cloud SQL, or larger disks unless acce
 
 ## Deployment (Ansible)
 
-Located in the `ansible/` directory. This manages the full lifecycle of the Miniflux application on Raspberry Pi and Google Cloud targets.
+Located in the `ansible/` directory. This manages the full lifecycle of the Miniflux application on Google Cloud.
 
 ### Architecture
 
@@ -98,15 +98,17 @@ To provision the server and deploy the container stack:
 
 ```bash
 cd ansible
-ansible-playbook -i hosts.ini deploy_miniflux.yml --limit miniflux_pi
-ansible-playbook -i hosts.ini deploy_miniflux.yml --limit miniflux_gcp
+ansible-playbook -i hosts.ini deploy_miniflux.yml
 ```
 
-For migration history and remaining Raspberry Pi decommission steps, see [`../docs/miniflux-gcp-migration.md`](../docs/miniflux-gcp-migration.md).
+For migration history from the legacy Raspberry Pi setup, see [`../docs/miniflux-gcp-migration.md`](../docs/miniflux-gcp-migration.md).
 
 ### Ansible Roles & Tasks
 
-This deployment uses the shared **`debian_docker_host`** Ansible role located at the root of the repository (`../ansible/roles/debian_docker_host/`). This role provisions standard host security (UFW, SSH hardening), installs Docker Engine, and configures routine maintenance on Debian-based targets.
+This deployment uses the following shared Ansible roles located at `../../ansible/roles/`:
+
+- **`debian_docker_host`**: Provisions standard host security (SSH hardening, unattended-upgrades), installs Docker Engine, and configures routine maintenance. Note that UFW is deliberately omitted as network security is managed at the GCP VPC level.
+- **`gcp_host`**: A GCP-specific wrapper that installs the Google Cloud Ops Agent and configures Docker to use the `gcplogs` driver.
 
 ---
 
@@ -115,7 +117,7 @@ This deployment uses the shared **`debian_docker_host`** Ansible role located at
 For GCP-based deployments, this workspace implements automated observability:
 
 - **Logging**: Docker is configured to use the `gcplogs` driver, routing all container logs directly to Google Cloud Logging.
-- **Security Logs**: GCP Firewall rules are configured to explicitly deny RDP (port 3389) and public SSH (port 22) to minimize noise and connection attempts in system logs (UFW).
+- **Security Logs**: GCP Firewall rules (managed via Terraform) are configured to explicitly deny RDP (port 3389) and public SSH (port 22) to minimize noise and connection attempts in system logs.
 - **Ops Agent**: The Google Cloud Ops Agent is automatically installed and configured on the VM to collect system and application metrics.
 - **Uptime Monitoring**: Terraform provisions a Cloud Monitoring Uptime Check to verify the availability of the Miniflux service.
 - **Budgeting**: A GCP Billing Budget of 5.00 USD is configured for the project with alert thresholds at 50%, 90%, and 100% of the budget.

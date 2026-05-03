@@ -1,6 +1,6 @@
 ---
 - name: Deploy Miniflux
-  hosts: miniflux_vm
+  hosts: miniflux_gcp
   become: true
 
   vars:
@@ -31,21 +31,17 @@
         name: e2fsprogs
         state: present
         update_cache: true
-      when: miniflux_target == "gcp"
 
     - name: Check Docker data disk filesystem
       ansible.builtin.command: "blkid {{ docker_data_device }}"
       register: docker_data_blkid
       changed_when: false
       failed_when: false
-      when: miniflux_target == "gcp"
 
     - name: Create ext4 filesystem on Docker data disk
       ansible.builtin.command: "mkfs.ext4 -F {{ docker_data_device }}"
       changed_when: true
-      when:
-        - miniflux_target == "gcp"
-        - docker_data_blkid.rc != 0
+      when: docker_data_blkid.rc != 0
 
     - name: Ensure Docker data mountpoint exists
       ansible.builtin.file:
@@ -54,7 +50,6 @@
         owner: root
         group: root
         mode: '0711'
-      when: miniflux_target == "gcp"
 
     - name: Mount Docker data disk
       ansible.posix.mount:
@@ -63,10 +58,9 @@
         fstype: ext4
         opts: defaults,nofail
         state: mounted
-      when: miniflux_target == "gcp"
 
   roles:
-    - debian_docker_host
+    - gcp_host
 
   tasks:
     - name: Reset SSH connection after baseline user changes
@@ -92,9 +86,9 @@
       ansible.builtin.copy:
         dest: "{{ project_root }}/.env"
         content: |
-          TUNNEL_TOKEN={{ vault_tunnel_token | default(tunnel_token) }}
-          DB_PASSWORD={{ vault_db_password | default(db_password) }}
-          ADMIN_PASSWORD={{ vault_admin_password | default(admin_password) }}
+          TUNNEL_TOKEN={{ tunnel_token }}
+          DB_PASSWORD={{ db_password }}
+          ADMIN_PASSWORD={{ admin_password }}
         mode: '0600'
         owner: "{{ ansible_user }}"
         group: "{{ ansible_user }}"
