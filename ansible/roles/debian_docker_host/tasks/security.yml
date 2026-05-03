@@ -1,34 +1,12 @@
 ---
+# Host-level security hardening. 
+# NOTE: This role assumes network-level firewalling (e.g., GCP VPC) is handled elsewhere.
+# UFW is deliberately omitted to avoid conflicts with Docker's iptables management.
+
 - name: Update apt cache
   ansible.builtin.apt:
     update_cache: true
     cache_valid_time: 3600
-
-- name: Install Uncomplicated Firewall
-  ansible.builtin.apt:
-    name: ufw
-    state: present
-
-- name: Set UFW default deny incoming
-  community.general.ufw:
-    direction: incoming
-    policy: deny
-
-- name: Set UFW default allow outgoing
-  community.general.ufw:
-    direction: outgoing
-    policy: allow
-
-- name: Allow SSH through UFW
-  community.general.ufw:
-    rule: allow
-    name: OpenSSH
-
-- name: Enable UFW
-  community.general.ufw:
-    state: enabled
-    logging: 'on'
-  notify: Restart docker
 
 - name: Install unattended-upgrades
   ansible.builtin.apt:
