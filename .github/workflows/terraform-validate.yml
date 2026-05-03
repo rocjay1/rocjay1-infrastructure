@@ -15,7 +15,7 @@ jobs:
         workspace:
           - miniflux/terraform
           - cloudflare/terraform
-          - feed-aggregator/terraform
+          - flare-bridge/terraform
 
     defaults:
       run:

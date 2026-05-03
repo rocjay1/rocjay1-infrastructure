@@ -12,7 +12,7 @@ variable "account_id" {
 variable "project_name" {
   description = "The name of the project."
   type        = string
-  default     = "feed-aggregator"
+  default     = "flare-bridge"
 }
 
 variable "zone_id" {

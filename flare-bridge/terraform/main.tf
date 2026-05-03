@@ -1,5 +1,5 @@
 # Cloudflare Worker (Identity)
-resource "cloudflare_worker" "feed_aggregator" {
+resource "cloudflare_worker" "flare_bridge" {
   account_id = var.account_id
   name       = "feed-aggregator"
 
@@ -12,11 +12,11 @@ resource "cloudflare_worker" "feed_aggregator" {
 }
 
 # Custom Domain for the Worker
-resource "cloudflare_workers_custom_domain" "feed_aggregator_domain" {
+resource "cloudflare_workers_custom_domain" "flare_bridge_domain" {
   account_id = var.account_id
   zone_id    = var.zone_id
   hostname   = "${var.subdomain}.${var.zone_name}"
-  service    = cloudflare_worker.feed_aggregator.name
+  service    = cloudflare_worker.flare_bridge.name
 
   lifecycle {
     ignore_changes = [
@@ -25,8 +25,8 @@ resource "cloudflare_workers_custom_domain" "feed_aggregator_domain" {
   }
 }
 
-# KV Namespace for feed sources
-resource "cloudflare_workers_kv_namespace" "sources_kv" {
+# D1 Database for FlareBridge
+resource "cloudflare_d1_database" "main" {
   account_id = var.account_id
-  title      = "${var.project_name}-sources"
+  name       = "flare-bridge-db"
 }

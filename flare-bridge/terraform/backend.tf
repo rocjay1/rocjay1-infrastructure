@@ -1,6 +1,6 @@
 terraform {
   backend "gcs" {
     bucket = "daily-tech-brief-tfstate"
-    prefix = "feed-aggregator"
+    prefix = "flare-bridge"
   }
 }
