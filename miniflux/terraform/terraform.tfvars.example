@@ -2,6 +2,7 @@ account_id  = "your-cloudflare-account-id"
 zone_id     = "your-cloudflare-zone-id"
 zone_name   = "example.com"
 project_id  = "your-gcp-project-id"
+billing_account = "0XXXXX-XXXXXX-XXXXXX"
 
 # Optional Cloudflare overrides:
 # miniflux_hostname    = "rss"

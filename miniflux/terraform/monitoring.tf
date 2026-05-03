@@ -10,6 +10,12 @@ resource "google_project_service" "logging" {
   disable_on_destroy = false
 }
 
+resource "google_project_service" "billing_budgets" {
+  project            = var.project_id
+  service            = "billingbudgets.googleapis.com"
+  disable_on_destroy = false
+}
+
 resource "google_monitoring_notification_channel" "email" {
   count        = var.alert_email != "" ? 1 : 0
   display_name = "Miniflux Alert Email"
@@ -164,4 +170,36 @@ resource "google_monitoring_dashboard" "miniflux_dashboard" {
 EOF
 
   depends_on = [google_project_service.monitoring]
+}
+
+resource "google_billing_budget" "miniflux_budget" {
+  billing_account = var.billing_account
+  display_name    = "Miniflux Project Budget"
+
+  budget_filter {
+    projects = ["projects/${var.project_id}"]
+  }
+
+  amount {
+    specified_amount {
+      currency_code = "USD"
+      units         = "5"
+    }
+  }
+
+  threshold_rules {
+    threshold_percent = 0.5
+  }
+  threshold_rules {
+    threshold_percent = 0.9
+  }
+  threshold_rules {
+    threshold_percent = 1.0
+  }
+
+  all_updates_rule {
+    monitoring_notification_channels = var.alert_email != "" ? [google_monitoring_notification_channel.email[0].name] : []
+  }
+
+  depends_on = [google_project_service.billing_budgets]
 }

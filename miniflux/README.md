@@ -17,7 +17,7 @@ Located in the `terraform/` directory, this provisions the Cloudflare Tunnel (`m
 
 - Terraform CLI
 - Cloudflare API Token (set via `CLOUDFLARE_API_TOKEN` or `terraform.tfvars`)
-- Required non-secret variables: `account_id`, `zone_id`, `zone_name`, and optionally `alert_email` (see `terraform/terraform.tfvars.example`)
+- Required non-secret variables: `account_id`, `zone_id`, `zone_name`, `billing_account`, and optionally `alert_email` (see `terraform/terraform.tfvars.example`)
 - Access to the target GCS bucket for remote state.
 
 ### Usage (Terraform)
@@ -118,4 +118,5 @@ For GCP-based deployments, this workspace implements automated observability:
 - **Security Logs**: GCP Firewall rules are configured to explicitly deny RDP (port 3389) and public SSH (port 22) to minimize noise and connection attempts in system logs (UFW).
 - **Ops Agent**: The Google Cloud Ops Agent is automatically installed and configured on the VM to collect system and application metrics.
 - **Uptime Monitoring**: Terraform provisions a Cloud Monitoring Uptime Check to verify the availability of the Miniflux service.
-- **Alerting**: A Monitoring Alert Policy is created to notify when the service is down. To receive email notifications, set the `alert_email` variable in your Terraform configuration.
+- **Budgeting**: A GCP Billing Budget of 5.00 USD is configured for the project with alert thresholds at 50%, 90%, and 100% of the budget.
+- **Alerting**: Monitoring Alert Policies are created for uptime, container errors, and budget thresholds. To receive email notifications, set the `alert_email` variable in your Terraform configuration.

@@ -142,3 +142,8 @@ variable "alert_email" {
   type        = string
   default     = ""
 }
+
+variable "billing_account" {
+  description = "GCP billing account ID to which the budget will be applied."
+  type        = string
+}
