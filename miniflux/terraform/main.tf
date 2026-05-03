@@ -26,23 +26,3 @@ module "cloudflare_tunnel" {
     }
   ]
 }
-
-moved {
-  from = random_bytes.miniflux_tunnel_secret
-  to   = module.cloudflare_tunnel.random_bytes.tunnel_secret
-}
-
-moved {
-  from = cloudflare_zero_trust_tunnel_cloudflared.miniflux_tunnel
-  to   = module.cloudflare_tunnel.cloudflare_zero_trust_tunnel_cloudflared.tunnel
-}
-
-moved {
-  from = cloudflare_zero_trust_tunnel_cloudflared_config.miniflux_tunnel_cfg
-  to   = module.cloudflare_tunnel.cloudflare_zero_trust_tunnel_cloudflared_config.tunnel_cfg
-}
-
-moved {
-  from = cloudflare_dns_record.miniflux_dns
-  to   = module.cloudflare_tunnel.cloudflare_dns_record.dns
-}
