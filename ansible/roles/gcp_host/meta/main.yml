@@ -3,5 +3,5 @@ dependencies:
   - role: debian_docker_host
     vars:
       # GCP-specific Docker daemon configuration
-        debian_docker_host_docker_daemon_config:
-            log-driver: "gcplogs"
+      debian_docker_host_docker_daemon_config:
+        log-driver: "gcplogs"
