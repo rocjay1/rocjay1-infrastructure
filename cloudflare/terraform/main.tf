@@ -29,6 +29,12 @@ resource "cloudflare_zone_setting" "always_use_https" {
   value      = "on"
 }
 
+resource "cloudflare_zone_setting" "automatic_https_rewrites" {
+  zone_id    = var.zone_id
+  setting_id = "automatic_https_rewrites"
+  value      = "on"
+}
+
 resource "cloudflare_zone_setting" "ssl_strict" {
   zone_id    = var.zone_id
   setting_id = "ssl"
@@ -74,7 +80,7 @@ resource "cloudflare_ruleset" "main" {
     },
     {
       action      = "block"
-      expression  = "(http.host eq \"feeds.${var.zone_name}\" and ip.src ne 8.231.239.219)"
+      expression  = "(http.host eq \"feeds.${var.zone_name}\" and ssl and ip.src ne 8.231.239.219)"
       description = "Block non-Miniflux traffic to feed aggregator"
       enabled     = true
     }
