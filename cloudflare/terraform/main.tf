@@ -73,6 +73,15 @@ resource "cloudflare_ruleset" "main" {
 
   rules = [
     {
+      action      = "skip"
+      description = "Bypass WAF for Cloudflare internal services (Security Insights, Health Checks)"
+      enabled     = true
+      expression  = "(cf.client.bot and ip.geoip.asnum eq 13335)"
+      action_parameters = {
+        ruleset = "current"
+      }
+    },
+    {
       action      = "block"
       expression  = "(ip.src.country ne \"US\")"
       description = "Block non-US traffic"
