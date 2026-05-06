@@ -89,7 +89,7 @@ resource "cloudflare_ruleset" "main" {
     },
     {
       action      = "js_challenge"
-      expression  = "(http.host eq \"feeds.${var.zone_name}\" and ssl and ip.src ne 8.231.239.219)"
+      expression  = "(http.host eq \"feeds.${var.zone_name}\")"
       description = "Challenge non-Miniflux traffic to feed aggregator"
       enabled     = true
     }
