@@ -23,13 +23,13 @@
 
 - name: Set Docker apt architecture
   ansible.builtin.set_fact:
-    debian_docker_host_docker_apt_arch: "{{ 'arm64' if ansible_architecture in ['aarch64', 'arm64'] else 'amd64' }}"
+    debian_docker_host_docker_apt_arch: "{{ 'arm64' if ansible_facts['architecture'] in ['aarch64', 'arm64'] else 'amd64' }}"
 
 - name: Add Docker repository
   ansible.builtin.apt_repository:
     repo: >-
       deb [arch={{ debian_docker_host_docker_apt_arch }} signed-by=/etc/apt/keyrings/docker.asc]
-      https://download.docker.com/linux/debian {{ ansible_distribution_release }} stable
+      https://download.docker.com/linux/debian {{ ansible_facts['distribution_release'] }} stable
     state: present
     filename: docker
 
@@ -51,7 +51,7 @@
 
 - name: Add user to docker group
   ansible.builtin.user:
-    name: "{{ ansible_user }}"
+    name: "{{ ansible_facts['user'] }}"
     groups: docker
     append: true
 

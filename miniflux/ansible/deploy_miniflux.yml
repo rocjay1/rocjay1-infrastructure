@@ -70,8 +70,8 @@
       ansible.builtin.file:
         path: "{{ project_root }}"
         state: directory
-        owner: "{{ ansible_user }}"
-        group: "{{ ansible_user }}"
+        owner: "{{ ansible_facts['user'] }}"
+        group: "{{ ansible_facts['user'] }}"
         mode: '0755'
 
     - name: Copy Docker Compose file
@@ -79,8 +79,8 @@
         src: "./docker-compose.yml"
         dest: "{{ project_root }}/docker-compose.yml"
         mode: '0644'
-        owner: "{{ ansible_user }}"
-        group: "{{ ansible_user }}"
+        owner: "{{ ansible_facts['user'] }}"
+        group: "{{ ansible_facts['user'] }}"
 
     - name: Create .env file with Tunnel Token and Database Credentials
       ansible.builtin.copy:
@@ -90,8 +90,8 @@
           DB_PASSWORD={{ db_password }}
           ADMIN_PASSWORD={{ admin_password }}
         mode: '0600'
-        owner: "{{ ansible_user }}"
-        group: "{{ ansible_user }}"
+        owner: "{{ ansible_facts['user'] }}"
+        group: "{{ ansible_facts['user'] }}"
 
     - name: Deploy services via Docker Compose
       community.docker.docker_compose_v2:
