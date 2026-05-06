@@ -74,23 +74,23 @@ resource "cloudflare_ruleset" "main" {
   rules = [
     {
       action      = "skip"
-      description = "Bypass WAF for Cloudflare internal services (Security Insights, Health Checks)"
+      description = "Bypass WAF for Miniflux VM"
       enabled     = true
-      expression  = "(cf.client.bot and ip.geoip.asnum eq 13335)"
+      expression  = "(ip.src eq 8.231.239.219)"
       action_parameters = {
         ruleset = "current"
       }
     },
     {
-      action      = "block"
+      action      = "managed_challenge"
       expression  = "(ip.src.country ne \"US\")"
-      description = "Block non-US traffic"
+      description = "Challenge non-US traffic"
       enabled     = true
     },
     {
-      action      = "block"
+      action      = "js_challenge"
       expression  = "(http.host eq \"feeds.${var.zone_name}\" and ssl and ip.src ne 8.231.239.219)"
-      description = "Block non-Miniflux traffic to feed aggregator"
+      description = "Challenge non-Miniflux traffic to feed aggregator"
       enabled     = true
     }
   ]
