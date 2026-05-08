@@ -3,15 +3,12 @@
 # NOTE: This role assumes network-level firewalling (e.g., GCP VPC) is handled elsewhere.
 # UFW is deliberately omitted to avoid conflicts with Docker's iptables management.
 
-- name: Update apt cache
-  ansible.builtin.apt:
-    update_cache: true
-    cache_valid_time: 3600
-
 - name: Install unattended-upgrades
   ansible.builtin.apt:
     name: unattended-upgrades
     state: present
+    update_cache: true
+    cache_valid_time: 3600
 
 - name: Configure unattended-upgrades
   ansible.builtin.copy:
