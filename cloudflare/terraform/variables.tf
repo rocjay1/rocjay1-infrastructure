@@ -20,7 +20,7 @@ variable "zone_id" {
 }
 
 variable "zone_name" {
-  description = "Cloud zone name"
+  description = "Cloudflare zone name."
   type        = string
 }
 

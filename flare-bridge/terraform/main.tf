@@ -1,4 +1,4 @@
-# Cloudflare Worker (Identity)
+# Cloudflare Worker (Feed Aggregator)
 resource "cloudflare_worker" "flare_bridge" {
   account_id = var.account_id
   name       = "feed-aggregator"
