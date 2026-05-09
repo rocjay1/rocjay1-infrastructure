@@ -65,10 +65,11 @@ jobs:
           # 2. Capture Plan for Jules and Summary
           if [ "$exit_code" -eq "2" ]; then
             echo "drift_detected=true" >> $GITHUB_OUTPUT
-            # Capture plan output to a multiline string for Jules
-            echo "plan_output<<EOF" >> $GITHUB_OUTPUT
+            # Capture plan output to a multiline string for Jules using a dynamic EOF
+            EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
+            echo "plan_output<<$EOF" >> $GITHUB_OUTPUT
             terraform show -no-color tfplan >> $GITHUB_OUTPUT
-            echo "EOF" >> $GITHUB_OUTPUT
+            echo "$EOF" >> $GITHUB_OUTPUT
             
             # 3. Publish to Job Summary
             echo "### Drift Report for \`${{ matrix.workspace }}\`" >> $GITHUB_STEP_SUMMARY
