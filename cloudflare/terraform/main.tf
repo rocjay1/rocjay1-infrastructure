@@ -16,11 +16,8 @@ data "cloudflare_zone" "main" {
 }
 
 resource "cloudflare_zone_dnssec" "main_zone_dnssec" {
-  zone_id             = data.cloudflare_zone.main.zone_id
-  dnssec_multi_signer = false
-  dnssec_presigned    = false
-  dnssec_use_nsec3    = false
-  status              = "active"
+  zone_id = data.cloudflare_zone.main.zone_id
+  status  = "active"
 }
 
 resource "cloudflare_zone_setting" "always_use_https" {
@@ -77,6 +74,9 @@ resource "cloudflare_ruleset" "main" {
       description = "Bypass WAF for Miniflux VM"
       enabled     = true
       expression  = "(ip.src eq 8.231.239.219)"
+      logging = {
+        enabled = true
+      }
       action_parameters = {
         ruleset = "current"
       }
@@ -86,6 +86,9 @@ resource "cloudflare_ruleset" "main" {
       description = "Allow Google Cloud Uptime Checks with secret"
       enabled     = true
       expression  = "(http.user_agent contains \"GoogleStackdriverMonitoring-UptimeChecks\" and http.request.headers[\"x-gcp-uptime-secret\"][0] eq \"${var.uptime_check_secret}\")"
+      logging = {
+        enabled = true
+      }
       action_parameters = {
         ruleset = "current"
       }
@@ -95,12 +98,18 @@ resource "cloudflare_ruleset" "main" {
       expression  = "(ip.src.country ne \"US\")"
       description = "Challenge non-US traffic"
       enabled     = true
+      logging = {
+        enabled = true
+      }
     },
     {
       action      = "js_challenge"
       expression  = "(http.host eq \"feeds.${var.zone_name}\")"
       description = "Challenge non-Miniflux traffic to feed aggregator"
       enabled     = true
+      logging = {
+        enabled = true
+      }
     }
   ]
 }
