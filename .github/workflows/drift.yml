@@ -19,6 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
+      max-parallel: 1
       matrix:
         workspace:
           - cloudflare/terraform
@@ -29,6 +30,10 @@ jobs:
     defaults:
       run:
         working-directory: ${{ matrix.workspace }}
+
+    env:
+      TF_LOG: DEBUG
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
 
     steps:
       - name: Checkout
