@@ -122,15 +122,15 @@ resource "google_monitoring_dashboard" "miniflux_dashboard" {
                       "perSeriesAligner": "ALIGN_MEAN"
                     }
                   }
-                }
+                },
+                "plotType": "LINE",
+                "targetAxis": "Y1"
               }
             ]
           }
         },
         "width": 6,
-        "height": 4,
-        "xPos": 0,
-        "yPos": 0
+        "height": 4
       },
       {
         "widget": {
@@ -146,15 +146,16 @@ resource "google_monitoring_dashboard" "miniflux_dashboard" {
                       "perSeriesAligner": "ALIGN_MEAN"
                     }
                   }
-                }
+                },
+                "plotType": "LINE",
+                "targetAxis": "Y1"
               }
             ]
           }
         },
         "width": 6,
         "height": 4,
-        "xPos": 6,
-        "yPos": 0
+        "xPos": 6
       },
       {
         "widget": {
@@ -165,7 +166,6 @@ resource "google_monitoring_dashboard" "miniflux_dashboard" {
         },
         "width": 12,
         "height": 4,
-        "xPos": 0,
         "yPos": 4
       }
     ]
