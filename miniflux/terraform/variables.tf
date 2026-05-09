@@ -126,13 +126,13 @@ variable "data_disk_type" {
 variable "assign_public_ip" {
   description = "Whether to assign an external IPv4 address to the instance. Disable for tunnel-only deployments."
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "create_static_ipv4" {
   description = "Whether to reserve and attach a static external IPv4 address. Requires assign_public_ip=true."
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "public_ingress_cidrs" {

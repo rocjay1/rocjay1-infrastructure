@@ -176,12 +176,16 @@ EOF
   depends_on = [google_project_service.monitoring]
 }
 
+data "google_project" "miniflux" {
+  project_id = var.project_id
+}
+
 resource "google_billing_budget" "miniflux_budget" {
   billing_account = var.billing_account
   display_name    = "Miniflux Project Budget"
 
   budget_filter {
-    projects = ["projects/${var.project_id}"]
+    projects = ["projects/${data.google_project.miniflux.number}"]
   }
 
   amount {
