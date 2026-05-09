@@ -27,3 +27,9 @@ variable "tfstate_bucket" {
   type        = string
   default     = "daily-tech-brief-tfstate"
 }
+
+variable "managed_gcp_projects" {
+  description = "A list of all GCP projects in the ecosystem that the drift detector needs to access."
+  type        = list(string)
+  default     = ["abiding-cycle-464914-p6", "miniflux-494022"]
+}

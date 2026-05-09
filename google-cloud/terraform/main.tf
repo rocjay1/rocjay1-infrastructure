@@ -46,37 +46,37 @@ resource "google_storage_bucket_iam_member" "drift_detector_storage_admin" {
   member = "serviceAccount:${google_service_account.drift_detector.email}"
 }
 
-# Allow the service account to create tokens for itself (required for some WIF operations)
+# Grant permissions across all managed GCP projects
+resource "google_project_iam_member" "drift_detector_viewer" {
+  for_each = toset(var.managed_gcp_projects)
+  project  = each.value
+  role     = "roles/viewer"
+  member   = "serviceAccount:${google_service_account.drift_detector.email}"
+}
+
+resource "google_project_iam_member" "drift_detector_security_reviewer" {
+  for_each = toset(var.managed_gcp_projects)
+  project  = each.value
+  role     = "roles/iam.securityReviewer"
+  member   = "serviceAccount:${google_service_account.drift_detector.email}"
+}
+
+resource "google_project_iam_member" "drift_detector_service_usage" {
+  for_each = toset(var.managed_gcp_projects)
+  project  = each.value
+  role     = "roles/serviceusage.serviceUsageConsumer"
+  member   = "serviceAccount:${google_service_account.drift_detector.email}"
+}
+
+# Management Project Specific Permissions
 resource "google_project_iam_member" "drift_detector_token_creator" {
   project = var.project_id
   role    = "roles/iam.serviceAccountTokenCreator"
   member  = "serviceAccount:${google_service_account.drift_detector.email}"
 }
 
-# Grant read-only access to resources for drift detection
-resource "google_project_iam_member" "drift_detector_viewer" {
-  project = var.project_id
-  role    = "roles/viewer"
-  member  = "serviceAccount:${google_service_account.drift_detector.email}"
-}
-
-# Grant permission to read IAM policies for drift detection
-resource "google_project_iam_member" "drift_detector_security_reviewer" {
-  project = var.project_id
-  role    = "roles/iam.securityReviewer"
-  member  = "serviceAccount:${google_service_account.drift_detector.email}"
-}
-
-# Grant permission to view Workload Identity Pools
 resource "google_project_iam_member" "drift_detector_wif_viewer" {
   project = var.project_id
   role    = "roles/iam.workloadIdentityPoolViewer"
-  member  = "serviceAccount:${google_service_account.drift_detector.email}"
-}
-
-# Grant permission to use APIs for billing/quota (required when user_project_override is true)
-resource "google_project_iam_member" "drift_detector_service_usage" {
-  project = var.project_id
-  role    = "roles/serviceusage.serviceUsageConsumer"
   member  = "serviceAccount:${google_service_account.drift_detector.email}"
 }
