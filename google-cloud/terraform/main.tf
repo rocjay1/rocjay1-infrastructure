@@ -52,3 +52,24 @@ resource "google_project_iam_member" "drift_detector_token_creator" {
   role    = "roles/iam.serviceAccountTokenCreator"
   member  = "serviceAccount:${google_service_account.drift_detector.email}"
 }
+
+# Grant read-only access to resources for drift detection
+resource "google_project_iam_member" "drift_detector_viewer" {
+  project = var.project_id
+  role    = "roles/viewer"
+  member  = "serviceAccount:${google_service_account.drift_detector.email}"
+}
+
+# Grant permission to read IAM policies for drift detection
+resource "google_project_iam_member" "drift_detector_security_reviewer" {
+  project = var.project_id
+  role    = "roles/iam.securityReviewer"
+  member  = "serviceAccount:${google_service_account.drift_detector.email}"
+}
+
+# Grant permission to view Workload Identity Pools
+resource "google_project_iam_member" "drift_detector_wif_viewer" {
+  project = var.project_id
+  role    = "roles/iam.workloadIdentityPoolViewer"
+  member  = "serviceAccount:${google_service_account.drift_detector.email}"
+}
