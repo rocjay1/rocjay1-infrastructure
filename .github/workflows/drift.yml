@@ -63,6 +63,8 @@ jobs:
           if [ "$exit_code" -eq "2" ]; then
             echo "drift_detected=true" >> $GITHUB_OUTPUT
             terraform show -no-color tfplan > DRIFT_REPORT.md
+            # Exit with an error to signal drift in the job status
+            exit 1
           else
             echo "drift_detected=false" >> $GITHUB_OUTPUT
           fi
