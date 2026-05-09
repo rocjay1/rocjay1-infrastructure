@@ -2,11 +2,16 @@
 
 All notable changes to the Rocjay Infrastructure project will be documented in this file. This project uses a date-based versioning scheme.
 
-## [2026-05-06]
+## [2026-05-09]
 
 ### Added
+- Created a new `management/` workspace for shared administrative infrastructure.
+- Implemented **Workload Identity Federation (WIF)** for secure, keyless authentication from GitHub Actions to Google Cloud.
+- Provisioned a `terraform-drift-detector` service account for automated Terraform drift detection in the `github-mgmt` repository.
 - Implemented secure WAF allowlist for Google Cloud Uptime Checks using a secret header.
 - Added custom header configuration to Miniflux uptime monitoring.
+
+## [2026-05-06]
 
 ### Fixed
 - Cleaned up Ansible warnings and deprecations in the `miniflux` workspace and shared roles (issue #23).
