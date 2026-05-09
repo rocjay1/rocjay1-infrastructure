@@ -37,6 +37,10 @@ resource "google_monitoring_uptime_check_config" "miniflux_https" {
     port         = 443
     use_ssl      = true
     validate_ssl = true
+
+    headers = {
+      "X-GCP-Uptime-Secret" = var.uptime_check_secret
+    }
   }
 
   monitored_resource {

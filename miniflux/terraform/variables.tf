@@ -147,3 +147,9 @@ variable "billing_account" {
   description = "GCP billing account ID to which the budget will be applied."
   type        = string
 }
+
+variable "uptime_check_secret" {
+  description = "Secret value for the X-GCP-Uptime-Secret header to securely allow health checks."
+  type        = string
+  sensitive   = true
+}

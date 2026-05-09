@@ -4,6 +4,10 @@ All notable changes to the Rocjay Infrastructure project will be documented in t
 
 ## [2026-05-06]
 
+### Added
+- Implemented secure WAF allowlist for Google Cloud Uptime Checks using a secret header.
+- Added custom header configuration to Miniflux uptime monitoring.
+
 ### Fixed
 - Cleaned up Ansible warnings and deprecations in the `miniflux` workspace and shared roles (issue #23).
   - Explicitly set `ansible_python_interpreter` to resolve discovery warnings.

@@ -64,3 +64,9 @@ variable "entra_cloudflare_group_description" {
   type        = string
   default     = "Users allowed to access internal applications via Cloudflare Zero Trust."
 }
+
+variable "uptime_check_secret" {
+  description = "Secret value for the X-GCP-Uptime-Secret header to securely allow health checks."
+  type        = string
+  sensitive   = true
+}

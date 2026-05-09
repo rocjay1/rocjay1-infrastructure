@@ -82,6 +82,15 @@ resource "cloudflare_ruleset" "main" {
       }
     },
     {
+      action      = "skip"
+      description = "Allow Google Cloud Uptime Checks with secret"
+      enabled     = true
+      expression  = "(http.user_agent contains \"GoogleStackdriverMonitoring-UptimeChecks\" and http.request.headers[\"x-gcp-uptime-secret\"][0] eq \"${var.uptime_check_secret}\")"
+      action_parameters = {
+        ruleset = "current"
+      }
+    },
+    {
       action      = "managed_challenge"
       expression  = "(ip.src.country ne \"US\")"
       description = "Challenge non-US traffic"
