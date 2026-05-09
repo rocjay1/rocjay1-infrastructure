@@ -45,3 +45,10 @@ resource "google_storage_bucket_iam_member" "drift_detector_storage_admin" {
   role   = "roles/storage.objectAdmin"
   member = "serviceAccount:${google_service_account.drift_detector.email}"
 }
+
+# Allow the service account to create tokens for itself (required for some WIF operations)
+resource "google_project_iam_member" "drift_detector_token_creator" {
+  project = var.project_id
+  role    = "roles/iam.serviceAccountTokenCreator"
+  member  = "serviceAccount:${google_service_account.drift_detector.email}"
+}
