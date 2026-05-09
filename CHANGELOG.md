@@ -1,11 +1,20 @@
 # Changelog
 
 All notable changes to the Rocjay Infrastructure project will be documented in this file. This project uses a date-based versioning scheme.
-
 ## [2026-05-09]
 
 ### Added
+- Implemented automated **Terraform Drift Detection** for all workspaces (`cloudflare`, `google-cloud`, `flare-bridge`, `miniflux`).
+- Created GitHub Actions workflow `drift.yml` to run weekly scans and open PRs for detected drift.
+- Provisioned Workload Identity Federation (WIF) support for the `rocjay1-infrastructure` repository.
+
+### Changed
+- Renamed the `management/` workspace to `google-cloud/` and migrated Terraform state in GCS.
+- Refactored `google-cloud` WIF permissions to support multiple repositories using `for_each`.
+
+### Earlier on [2026-05-09]
 - Created a new `management/` workspace for shared administrative infrastructure.
+...
 - Implemented **Workload Identity Federation (WIF)** for secure, keyless authentication from GitHub Actions to Google Cloud.
 - Provisioned a `terraform-drift-detector` service account for automated Terraform drift detection in the `github-mgmt` repository.
 - Implemented secure WAF allowlist for Google Cloud Uptime Checks using a secret header.
