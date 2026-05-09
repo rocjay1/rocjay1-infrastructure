@@ -5,7 +5,7 @@
 - This repository is infrastructure-as-code for the Rocjay ecosystem.
 - Primary tools are Terraform and Ansible.
 - Shared Terraform modules live under `terraform/modules/`.
-- Application or service workspaces live under directories such as `cloudflare/`, `miniflux/`, and `flare-bridge/`.
+- Application or service workspaces live under directories such as `cloudflare/`, `miniflux/`, `flare-bridge/`, and `management/`.
 - Many workspaces use a `terraform/` subdirectory for provisioning and an `ansible/` subdirectory for host configuration and deployment.
 
 ## How to work in this repo
@@ -62,6 +62,12 @@
 - **Ingress is restricted via WAF** (managed in the `cloudflare/terraform` workspace) to the Miniflux VM's static IP.
 - Implements an hourly cron trigger and a custom domain mapping.
 - Ensure the worker is deployed before attempting to attach domains or triggers (managed via `depends_on`).
+
+### `management/terraform`
+
+- Provisions shared management and bootstrap resources (e.g., Workload Identity Federation, Service Accounts for CI/CD).
+- Typically targets the management GCP project (`abiding-cycle-464914-p6`).
+- Centralizes identity federation to avoid duplication across service-specific workspaces.
 
 ### `ansible/`
 
