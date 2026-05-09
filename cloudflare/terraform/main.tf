@@ -106,5 +106,9 @@ resource "cloudflare_ruleset" "main" {
       enabled     = true
     }
   ]
+
+  lifecycle {
+    ignore_changes = [rules]
+  }
 }
 
