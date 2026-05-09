@@ -31,6 +31,7 @@ jobs:
           - miniflux/terraform
           - cloudflare/terraform
           - flare-bridge/terraform
+          - google-cloud/terraform
 
     defaults:
       run:
