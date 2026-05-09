@@ -98,18 +98,12 @@ resource "cloudflare_ruleset" "main" {
       expression  = "(ip.src.country ne \"US\")"
       description = "Challenge non-US traffic"
       enabled     = true
-      logging = {
-        enabled = true
-      }
     },
     {
       action      = "js_challenge"
       expression  = "(http.host eq \"feeds.${var.zone_name}\")"
       description = "Challenge non-Miniflux traffic to feed aggregator"
       enabled     = true
-      logging = {
-        enabled = true
-      }
     }
   ]
 }
