@@ -103,13 +103,15 @@ jobs:
           add-paths: |
             ${{ matrix.workspace }}/DRIFT_REPORT.md
 
-      - name: Request review from Jules
+      - name: Invoke Jules to fix drift
         if: steps.drift.outputs.drift_detected == 'true' && steps.cpr.outputs.pull-request-number != ''
-        uses: sanjay3290/jules-pr-reviewer@v1
+        uses: google-labs-code/jules-invoke@v1
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          pull_request_number: ${{ steps.cpr.outputs.pull-request-number }}
-          model: "gemini-2.0-flash"
+          jules_api_key: ${{ secrets.JULES_API_KEY }}
+          prompt: |
+            Terraform drift was detected in the `${{ matrix.workspace }}` workspace.
+            Please investigate the drift reported in `${{ matrix.workspace }}/DRIFT_REPORT.md` and update the Terraform configuration files in `${{ matrix.workspace }}` to match the current cloud state and resolve the drift.
+            Apply the fixes directly to the `${{ steps.cpr.outputs.pull-request-branch }}` branch.
 
       - name: Finalize Status
         if: always()
