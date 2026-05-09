@@ -73,3 +73,10 @@ resource "google_project_iam_member" "drift_detector_wif_viewer" {
   role    = "roles/iam.workloadIdentityPoolViewer"
   member  = "serviceAccount:${google_service_account.drift_detector.email}"
 }
+
+# Grant permission to use APIs for billing/quota (required when user_project_override is true)
+resource "google_project_iam_member" "drift_detector_service_usage" {
+  project = var.project_id
+  role    = "roles/serviceusage.serviceUsageConsumer"
+  member  = "serviceAccount:${google_service_account.drift_detector.email}"
+}
