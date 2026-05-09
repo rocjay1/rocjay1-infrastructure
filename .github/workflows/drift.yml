@@ -58,6 +58,23 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
 
+      - name: Publish Drift Report to Job Summary
+        if: always()
+        run: |
+          echo "### Drift Report for \`${{ matrix.workspace }}\`" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.plan.outputs.drift_detected }}" == "true" ]; then
+            echo "#### ⚠️ Drift Detected" >> $GITHUB_STEP_SUMMARY
+            echo '```terraform' >> $GITHUB_STEP_SUMMARY
+            cat DRIFT_REPORT.md >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          elif [ "${{ steps.plan.outputs.exit_code }}" == "0" ]; then
+            echo "#### ✅ No Drift Detected" >> $GITHUB_STEP_SUMMARY
+          elif [ -z "${{ steps.plan.outputs.exit_code }}" ]; then
+            echo "#### ❌ Workflow failed before reaching the plan step." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "#### ❌ Terraform Plan Failed (Exit Code: ${{ steps.plan.outputs.exit_code }})" >> $GITHUB_STEP_SUMMARY
+          fi
+
       - name: Create Pull Request
         if: steps.plan.outputs.drift_detected == 'true'
         uses: peter-evans/create-pull-request@v6
