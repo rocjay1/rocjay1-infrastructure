@@ -114,6 +114,8 @@ resource "google_monitoring_dashboard" "miniflux_dashboard" {
           "xyChart": {
             "dataSets": [
               {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "timeSeriesFilter": {
                     "filter": "metric.type=\"compute.googleapis.com/instance/cpu/utilization\" resource.type=\"gce_instance\" resource.label.\"instance_id\"=\"${google_compute_instance.miniflux.instance_id}\"",
@@ -128,9 +130,7 @@ resource "google_monitoring_dashboard" "miniflux_dashboard" {
           }
         },
         "width": 6,
-        "height": 4,
-        "xPos": 0,
-        "yPos": 0
+        "height": 4
       },
       {
         "widget": {
@@ -138,6 +138,8 @@ resource "google_monitoring_dashboard" "miniflux_dashboard" {
           "xyChart": {
             "dataSets": [
               {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
                 "timeSeriesQuery": {
                   "timeSeriesFilter": {
                     "filter": "metric.type=\"agent.googleapis.com/memory/percent_used\" resource.type=\"gce_instance\" resource.label.\"instance_id\"=\"${google_compute_instance.miniflux.instance_id}\" metric.label.\"state\"=\"used\"",
@@ -153,8 +155,7 @@ resource "google_monitoring_dashboard" "miniflux_dashboard" {
         },
         "width": 6,
         "height": 4,
-        "xPos": 6,
-        "yPos": 0
+        "xPos": 6
       },
       {
         "widget": {
@@ -165,7 +166,6 @@ resource "google_monitoring_dashboard" "miniflux_dashboard" {
         },
         "width": 12,
         "height": 4,
-        "xPos": 0,
         "yPos": 4
       }
     ]
