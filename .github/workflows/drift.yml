@@ -116,7 +116,11 @@ jobs:
       - name: Finalize Status
         if: always()
         run: |
-          if [ "${{ steps.drift.outputs.exit_code }}" != "0" ] && [ -n "${{ steps.drift.outputs.exit_code }}" ]; then
-            echo "Failing job because Terraform Plan returned exit code ${{ steps.drift.outputs.exit_code }}"
+          if [ "${{ steps.drift.outputs.exit_code }}" == "1" ]; then
+            echo "Failing job because a Terraform error occurred (Exit Code 1)."
             exit 1
+          fi
+          
+          if [ "${{ steps.drift.outputs.exit_code }}" == "2" ]; then
+            echo "Drift was detected (Exit Code 2), but remediation PR and Jules have been successfully triggered."
           fi
