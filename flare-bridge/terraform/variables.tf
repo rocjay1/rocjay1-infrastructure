@@ -7,6 +7,7 @@ variable "cloudflare_api_token" {
 variable "account_id" {
   description = "Cloudflare account ID."
   type        = string
+  default     = "a7107b56168148c0c72a7040d5f98c76"
 }
 
 variable "project_name" {
@@ -18,11 +19,13 @@ variable "project_name" {
 variable "zone_id" {
   description = "Cloudflare zone ID."
   type        = string
+  default     = "f5ddaca671ac53ee0442c5ea08772dcf"
 }
 
 variable "zone_name" {
   description = "Cloudflare zone name."
   type        = string
+  default     = "roccosmodernsite.net"
 }
 
 variable "subdomain" {

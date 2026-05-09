@@ -7,16 +7,19 @@ variable "cloudflare_api_token" {
 variable "account_id" {
   description = "Cloudflare account ID."
   type        = string
+  default     = "a7107b56168148c0c72a7040d5f98c76"
 }
 
 variable "zone_id" {
   description = "Cloudflare zone ID."
   type        = string
+  default     = "f5ddaca671ac53ee0442c5ea08772dcf"
 }
 
 variable "zone_name" {
   description = "Cloudflare zone name."
   type        = string
+  default     = "roccosmodernsite.net"
 }
 
 variable "miniflux_hostname" {
@@ -34,6 +37,7 @@ variable "miniflux_tunnel_name" {
 variable "project_id" {
   description = "GCP project ID where Miniflux infrastructure is provisioned."
   type        = string
+  default     = "miniflux-494022"
 }
 
 variable "region" {
@@ -140,12 +144,13 @@ variable "public_ingress_cidrs" {
 variable "alert_email" {
   description = "Email address for monitoring alert notifications. If empty, alerts will be created but without a notification channel."
   type        = string
-  default     = ""
+  default     = "jasonroc19@gmail.com"
 }
 
 variable "billing_account" {
   description = "GCP billing account ID to which the budget will be applied."
   type        = string
+  default     = "015625-6929BD-FEEF09"
 }
 
 variable "uptime_check_secret" {
