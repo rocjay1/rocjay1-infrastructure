@@ -28,4 +28,8 @@ resource "cloudflare_workers_custom_domain" "flare_bridge_domain" {
 resource "cloudflare_d1_database" "main" {
   account_id = var.account_id
   name       = "flare-bridge-db"
+
+  read_replication = {
+    mode = "disabled"
+  }
 }
