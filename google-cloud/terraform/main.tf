@@ -24,13 +24,6 @@ resource "google_storage_bucket" "daily_tech_brief_tfstate" {
 # SECRET MANAGER
 # -----------------------------------------------------------------------------   
 
-resource "google_secret_manager_secret" "gemini_api_key" {
-  secret_id = "gemini-api-key"
-  replication {
-    auto {}
-  }
-}
-
 resource "google_secret_manager_secret" "gmail_app_password" {
   secret_id = "gmail-app-password"
   replication {
