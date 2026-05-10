@@ -28,12 +28,6 @@ variable "zone_name" {
   default     = "roccosmodernsite.net"
 }
 
-variable "cloudflare_team_domain" {
-  description = "Cloudflare Access team domain (for example, your-team-name)"
-  type        = string
-  default     = "rocjay1"
-}
-
 variable "uptime_check_secret" {
   description = "Secret value for the X-GCP-Uptime-Secret header to securely allow health checks."
   type        = string
