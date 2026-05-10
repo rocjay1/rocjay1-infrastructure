@@ -50,6 +50,7 @@
 
 - Uses the shared `terraform/modules/cloudflare_tunnel_app` module.
 - Provisions the Miniflux Cloudflare Tunnel, DNS, GCP VM, persistent disk, runtime service account, and firewall rules.
+- **Organization**: Configuration is split into `apis.tf` (services), `iam.tf` (service accounts), `network.tf` (IPs and firewalls), `compute.tf` (VM and disks), and `monitoring.tf`.
 - **Uses a static external IPv4** (reserved in GCP) to provide a stable source IP for the FlareBridge WAF lockdown.
 - Provisions GCP observability resources (Uptime Checks, Alert Policies) when `alert_email` is provided.
 - Keep free-tier guardrails intact unless the user explicitly accepts additional cost.

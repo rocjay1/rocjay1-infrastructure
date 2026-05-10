@@ -14,6 +14,7 @@ All notable changes to the Rocjay Infrastructure project will be documented in t
 ### Changed
 
 - Renamed the `management/` workspace to `google-cloud/` and migrated Terraform state in GCS.
+- Refactored `google-cloud` and `miniflux` workspaces to split monolithic configurations into logical, domain-specific files (`apis.tf`, `iam.tf`, `network.tf`, `compute.tf`).
 - Refactored `google-cloud` WIF permissions to support multiple repositories using `for_each`.
 - Added comprehensive structural comments across all major Terraform configurations to improve readability.
 - Cleaned up outdated configuration references in README files for `miniflux`, `google-cloud`, and `flare-bridge`.
