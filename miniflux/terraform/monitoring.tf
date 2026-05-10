@@ -1,3 +1,6 @@
+# -----------------------------------------------------------------------------
+# CORE SERVICES
+# -----------------------------------------------------------------------------
 resource "google_project_service" "monitoring" {
   project            = var.project_id
   service            = "monitoring.googleapis.com"
@@ -16,6 +19,9 @@ resource "google_project_service" "billing_budgets" {
   disable_on_destroy = false
 }
 
+# -----------------------------------------------------------------------------
+# NOTIFICATION CHANNELS
+# -----------------------------------------------------------------------------
 resource "google_monitoring_notification_channel" "email" {
   count        = var.alert_email != "" ? 1 : 0
   display_name = "Miniflux Alert Email"
@@ -27,6 +33,9 @@ resource "google_monitoring_notification_channel" "email" {
   depends_on = [google_project_service.monitoring]
 }
 
+# -----------------------------------------------------------------------------
+# UPTIME CHECKS
+# -----------------------------------------------------------------------------
 resource "google_monitoring_uptime_check_config" "miniflux_https" {
   display_name = "Miniflux HTTPS Uptime Check"
   timeout      = "10s"
@@ -54,6 +63,9 @@ resource "google_monitoring_uptime_check_config" "miniflux_https" {
   depends_on = [google_project_service.monitoring]
 }
 
+# -----------------------------------------------------------------------------
+# ALERT POLICIES
+# -----------------------------------------------------------------------------
 resource "google_monitoring_alert_policy" "miniflux_uptime_alert" {
   display_name = "Miniflux Uptime Alert"
   combiner     = "OR"
@@ -101,6 +113,9 @@ resource "google_monitoring_alert_policy" "miniflux_container_errors" {
   depends_on = [google_project_service.monitoring, google_project_service.logging]
 }
 
+# -----------------------------------------------------------------------------
+# DASHBOARDS
+# -----------------------------------------------------------------------------
 resource "google_monitoring_dashboard" "miniflux_dashboard" {
   dashboard_json = <<EOF
 {
@@ -176,6 +191,9 @@ EOF
   depends_on = [google_project_service.monitoring]
 }
 
+# -----------------------------------------------------------------------------
+# BILLING & BUDGETS
+# -----------------------------------------------------------------------------
 data "google_project" "miniflux" {
   project_id = var.project_id
 }

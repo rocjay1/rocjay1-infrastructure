@@ -1,3 +1,6 @@
+# -----------------------------------------------------------------------------
+# TERRAFORM BLOCK
+# -----------------------------------------------------------------------------
 terraform {
   required_providers {
     cloudflare = {
@@ -7,10 +10,16 @@ terraform {
   }
 }
 
+# -----------------------------------------------------------------------------
+# SECRETS
+# -----------------------------------------------------------------------------
 resource "random_bytes" "tunnel_secret" {
   length = 32
 }
 
+# -----------------------------------------------------------------------------
+# TUNNEL
+# -----------------------------------------------------------------------------
 resource "cloudflare_zero_trust_tunnel_cloudflared" "tunnel" {
   account_id    = var.account_id
   name          = var.tunnel_name
@@ -34,6 +43,9 @@ resource "cloudflare_zero_trust_tunnel_cloudflared_config" "tunnel_cfg" {
   }
 }
 
+# -----------------------------------------------------------------------------
+# DNS
+# -----------------------------------------------------------------------------
 resource "cloudflare_dns_record" "dns" {
   zone_id = var.zone_id
   name    = var.cname_hostname

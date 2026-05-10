@@ -1,4 +1,6 @@
-# Workload Identity Federation for GitHub Actions
+# -----------------------------------------------------------------------------
+# WORKLOAD IDENTITY FEDERATION
+# -----------------------------------------------------------------------------
 resource "google_iam_workload_identity_pool" "github" {
   workload_identity_pool_id = "github-actions-pool"
   display_name              = "GitHub Actions Pool"
@@ -24,14 +26,18 @@ resource "google_iam_workload_identity_pool_provider" "github" {
   }
 }
 
-# Service Account for Drift Detection
+# -----------------------------------------------------------------------------
+# SERVICE ACCOUNTS
+# -----------------------------------------------------------------------------
 resource "google_service_account" "drift_detector" {
   account_id   = "terraform-drift-detector"
   display_name = "Terraform Drift Detector"
   description  = "Used for automated Terraform drift detection across the ecosystem."
 }
 
-# Allow specified repositories to impersonate the service account
+# -----------------------------------------------------------------------------
+# IAM BINDINGS: WIF IMPERSONATION
+# -----------------------------------------------------------------------------
 resource "google_service_account_iam_member" "wif_impersonation" {
   for_each           = toset(var.github_allowed_repos)
   service_account_id = google_service_account.drift_detector.name
@@ -39,14 +45,18 @@ resource "google_service_account_iam_member" "wif_impersonation" {
   member             = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.github.name}/attribute.repository/${var.github_org}/${each.value}"
 }
 
-# Grant permissions to the GCS bucket (Bucket and SA are in abiding-cycle-464914-p6)
+# -----------------------------------------------------------------------------
+# IAM BINDINGS: STATE STORAGE
+# -----------------------------------------------------------------------------
 resource "google_storage_bucket_iam_member" "drift_detector_storage_admin" {
   bucket = var.tfstate_bucket
   role   = "roles/storage.objectAdmin"
   member = "serviceAccount:${google_service_account.drift_detector.email}"
 }
 
-# Grant permissions across all managed GCP projects
+# -----------------------------------------------------------------------------
+# IAM BINDINGS: MANAGED PROJECTS
+# -----------------------------------------------------------------------------
 resource "google_project_iam_member" "drift_detector_viewer" {
   for_each = toset(var.managed_gcp_projects)
   project  = each.value
@@ -68,7 +78,9 @@ resource "google_project_iam_member" "drift_detector_service_usage" {
   member   = "serviceAccount:${google_service_account.drift_detector.email}"
 }
 
-# Management Project Specific Permissions
+# -----------------------------------------------------------------------------
+# IAM BINDINGS: MANAGEMENT PROJECT
+# -----------------------------------------------------------------------------
 resource "google_project_iam_member" "drift_detector_token_creator" {
   project = var.project_id
   role    = "roles/iam.serviceAccountTokenCreator"

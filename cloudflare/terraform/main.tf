@@ -1,8 +1,6 @@
-import {
-  to = cloudflare_account.main
-  id = var.account_id
-}
-
+# -----------------------------------------------------------------------------
+# ACCOUNT
+# -----------------------------------------------------------------------------
 resource "cloudflare_account" "main" {
   name = var.account_name
 
@@ -11,6 +9,9 @@ resource "cloudflare_account" "main" {
   }
 }
 
+# -----------------------------------------------------------------------------
+# ZONE & DNSSEC
+# -----------------------------------------------------------------------------
 data "cloudflare_zone" "main" {
   zone_id = var.zone_id
 }
@@ -20,6 +21,9 @@ resource "cloudflare_zone_dnssec" "main_zone_dnssec" {
   status  = "active"
 }
 
+# -----------------------------------------------------------------------------
+# ZONE SETTINGS
+# -----------------------------------------------------------------------------
 resource "cloudflare_zone_setting" "always_use_https" {
   zone_id    = var.zone_id
   setting_id = "always_use_https"
@@ -53,6 +57,9 @@ resource "cloudflare_zone_setting" "hsts" {
   })
 }
 
+# -----------------------------------------------------------------------------
+# TURNSTILE
+# -----------------------------------------------------------------------------
 resource "cloudflare_turnstile_widget" "main" {
   account_id = var.account_id
   name       = "Managed Turnstile Widget"
@@ -61,6 +68,9 @@ resource "cloudflare_turnstile_widget" "main" {
   region     = "world"
 }
 
+# -----------------------------------------------------------------------------
+# WAF / FIREWALL
+# -----------------------------------------------------------------------------
 resource "cloudflare_ruleset" "main" {
   zone_id     = var.zone_id
   name        = "Geo Block"

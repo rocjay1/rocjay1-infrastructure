@@ -1,3 +1,6 @@
+# -----------------------------------------------------------------------------
+# CLOUDFLARE WORKER
+# -----------------------------------------------------------------------------
 resource "cloudflare_worker" "flare_bridge" {
   account_id = var.account_id
   name       = "feed-aggregator"
@@ -10,7 +13,9 @@ resource "cloudflare_worker" "flare_bridge" {
   }
 }
 
-# Custom Domain for the Worker
+# -----------------------------------------------------------------------------
+# CUSTOM DOMAIN
+# -----------------------------------------------------------------------------
 resource "cloudflare_workers_custom_domain" "flare_bridge_domain" {
   account_id = var.account_id
   zone_id    = var.zone_id
@@ -24,7 +29,9 @@ resource "cloudflare_workers_custom_domain" "flare_bridge_domain" {
   }
 }
 
-# D1 Database for FlareBridge
+# -----------------------------------------------------------------------------
+# D1 DATABASE
+# -----------------------------------------------------------------------------
 resource "cloudflare_d1_database" "main" {
   account_id = var.account_id
   name       = "flare-bridge-db"

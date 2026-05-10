@@ -1,3 +1,6 @@
+# -----------------------------------------------------------------------------
+# CLOUDFLARE TUNNEL MODULE
+# -----------------------------------------------------------------------------
 module "cloudflare_tunnel" {
   source = "../../terraform/modules/cloudflare_tunnel_app"
 

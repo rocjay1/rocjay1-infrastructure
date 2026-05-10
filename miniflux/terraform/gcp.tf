@@ -1,3 +1,6 @@
+# -----------------------------------------------------------------------------
+# LOCALS
+# -----------------------------------------------------------------------------
 locals {
   miniflux_labels = {
     app         = "miniflux"
@@ -6,12 +9,18 @@ locals {
   }
 }
 
+# -----------------------------------------------------------------------------
+# CORE SERVICES
+# -----------------------------------------------------------------------------
 resource "google_project_service" "compute" {
   project            = var.project_id
   service            = "compute.googleapis.com"
   disable_on_destroy = false
 }
 
+# -----------------------------------------------------------------------------
+# SERVICE ACCOUNT & IAM
+# -----------------------------------------------------------------------------
 resource "google_service_account" "miniflux_runtime" {
   account_id   = "miniflux-runtime"
   display_name = "Miniflux runtime service account"
@@ -35,6 +44,9 @@ resource "google_project_iam_member" "miniflux_metadata" {
   member  = "serviceAccount:${google_service_account.miniflux_runtime.email}"
 }
 
+# -----------------------------------------------------------------------------
+# STORAGE
+# -----------------------------------------------------------------------------
 resource "google_compute_disk" "docker_data" {
   name   = "miniflux-docker-data"
   type   = var.data_disk_type
@@ -45,6 +57,9 @@ resource "google_compute_disk" "docker_data" {
   depends_on = [google_project_service.compute]
 }
 
+# -----------------------------------------------------------------------------
+# NETWORKING
+# -----------------------------------------------------------------------------
 resource "google_compute_address" "miniflux_ipv4" {
   count        = var.assign_public_ip && var.create_static_ipv4 ? 1 : 0
   name         = "miniflux-ipv4"
@@ -54,6 +69,9 @@ resource "google_compute_address" "miniflux_ipv4" {
   depends_on = [google_project_service.compute]
 }
 
+# -----------------------------------------------------------------------------
+# COMPUTE INSTANCE
+# -----------------------------------------------------------------------------
 resource "google_compute_instance" "miniflux" {
   name         = "miniflux"
   machine_type = var.machine_type
@@ -112,33 +130,9 @@ resource "google_compute_instance" "miniflux" {
   depends_on = [google_project_service.compute]
 }
 
-resource "google_compute_firewall" "miniflux_egress" {
-  name      = "miniflux-egress"
-  network   = "default"
-  direction = "EGRESS"
-
-  target_tags = ["miniflux"]
-
-  allow {
-    protocol = "tcp"
-    ports    = ["443"]
-  }
-
-  allow {
-    protocol = "udp"
-    ports    = ["53"]
-  }
-
-  allow {
-    protocol = "tcp"
-    ports    = ["53"]
-  }
-
-  destination_ranges = ["0.0.0.0/0"]
-
-  depends_on = [google_project_service.compute]
-}
-
+# -----------------------------------------------------------------------------
+# FIREWALL RULES
+# -----------------------------------------------------------------------------
 resource "google_compute_firewall" "miniflux_iap_ssh" {
   name      = "miniflux-iap-ssh"
   network   = "default"
