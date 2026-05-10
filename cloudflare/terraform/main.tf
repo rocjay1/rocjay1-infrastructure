@@ -18,6 +18,10 @@ data "cloudflare_zone" "main" {
 
 resource "cloudflare_zone_dnssec" "main_zone_dnssec" {
   zone_id = data.cloudflare_zone.main.zone_id
+
+  lifecycle {
+    ignore_changes = [status]
+  }
 }
 
 # -----------------------------------------------------------------------------
