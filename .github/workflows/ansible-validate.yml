@@ -1,9 +1,12 @@
 name: Ansible Validate
 
+env:
+  PYTHON_VERSION: "3.13"
+
 on:
   pull_request:
   push:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   ansible:
@@ -20,7 +23,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: ${{ env.PYTHON_VERSION }}
 
       - name: Install Ansible tooling
         run: |

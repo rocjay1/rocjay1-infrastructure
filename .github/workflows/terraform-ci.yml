@@ -1,8 +1,11 @@
 name: Terraform CI
 
+env:
+  TERRAFORM_VERSION: "1.15.2"
+
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
 
 permissions:
@@ -20,7 +23,7 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: 1.8.5
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
 
       - name: Terraform Format Check
         run: terraform fmt -check -recursive
@@ -53,13 +56,13 @@ jobs:
       - name: Authenticate to GCP
         uses: google-github-actions/auth@v2
         with:
-          workload_identity_provider: 'projects/921000564704/locations/global/workloadIdentityPools/github-actions-pool/providers/github-provider'
-          service_account: 'terraform-drift-detector@abiding-cycle-464914-p6.iam.gserviceaccount.com'
+          workload_identity_provider: "projects/921000564704/locations/global/workloadIdentityPools/github-actions-pool/providers/github-provider"
+          service_account: "terraform-drift-detector@abiding-cycle-464914-p6.iam.gserviceaccount.com"
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: 1.8.5
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
           terraform_wrapper: false
 
       - name: Terraform Init

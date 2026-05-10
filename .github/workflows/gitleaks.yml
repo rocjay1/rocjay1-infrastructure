@@ -2,10 +2,10 @@ name: gitleaks
 on:
   pull_request:
   push:
-    branches: [ main ]
+    branches: [main]
   workflow_dispatch:
   schedule:
-    - cron: "0 4 * * * " # Daily at 4 AM
+    - cron: "0 4 * * *" # Daily at 4 AM
 
 jobs:
   scan:

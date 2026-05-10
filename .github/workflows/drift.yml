@@ -1,8 +1,11 @@
 name: Terraform Drift Detection
 
+env:
+  TERRAFORM_VERSION: "1.15.2"
+
 on:
   schedule:
-    - cron: '0 8 * * 1' # Every Monday at 08:00 UTC
+    - cron: "0 8 * * 1" # Every Monday at 08:00 UTC
   workflow_dispatch:
 
 concurrency:
@@ -41,13 +44,13 @@ jobs:
       - name: Authenticate to GCP
         uses: google-github-actions/auth@v2
         with:
-          workload_identity_provider: 'projects/921000564704/locations/global/workloadIdentityPools/github-actions-pool/providers/github-provider'
-          service_account: 'terraform-drift-detector@abiding-cycle-464914-p6.iam.gserviceaccount.com'
+          workload_identity_provider: "projects/921000564704/locations/global/workloadIdentityPools/github-actions-pool/providers/github-provider"
+          service_account: "terraform-drift-detector@abiding-cycle-464914-p6.iam.gserviceaccount.com"
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: 1.8.5
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
           terraform_wrapper: false
 
       - name: Drift Detection & Reporting
@@ -59,9 +62,9 @@ jobs:
           terraform plan -detailed-exitcode -lock=false -input=false -out=tfplan
           exit_code=$?
           set -e
-          
+
           echo "exit_code=$exit_code" >> $GITHUB_OUTPUT
-          
+
           # 2. Capture Plan for Jules and Summary
           if [ "$exit_code" -eq "2" ]; then
             echo "drift_detected=true" >> $GITHUB_OUTPUT
@@ -96,12 +99,12 @@ jobs:
           jules_api_key: ${{ secrets.JULES_API_KEY }}
           prompt: |
             Terraform drift was detected in the `${{ matrix.workspace }}` workspace.
-            
+
             Drift Details:
             ${{ env.DRIFT_SUMMARY }}
 
             Please update the Terraform configuration files in `${{ matrix.workspace }}` to match the current cloud state described above and resolve the drift.
-            
+
             Automation Rules:
             - Create a new Pull Request with the fixes.
             - Ensure the PR description summarizes the changes made to resolve the drift.
@@ -113,7 +116,7 @@ jobs:
             echo "Failing job because a Terraform error occurred (Exit Code 1)."
             exit 1
           fi
-          
+
           if [ "${{ steps.drift.outputs.exit_code }}" == "2" ]; then
             echo "Drift was detected (Exit Code 2), but remediation PR and Jules have been successfully triggered."
           fi
