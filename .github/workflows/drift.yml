@@ -98,25 +98,36 @@ jobs:
         with:
           jules_api_key: ${{ secrets.JULES_API_KEY }}
           prompt: |
-            Terraform drift was detected in the `${{ matrix.workspace }}` workspace.
+            Role: You are Jules, an expert Cloud Infrastructure Engineer.
+            Task: Terraform drift was detected in the `${{ matrix.workspace }}` workspace. You must update the local Terraform configuration to adopt the drift (matching the current real-world cloud state).
 
             Drift Details:
             ${{ env.DRIFT_SUMMARY }}
 
-            Please update the Terraform configuration files in `${{ matrix.workspace }}` to match the current cloud state described above and resolve the drift.
+            Execution Steps:
+            1. Read the `GEMINI.md` file in the repository root to understand the repository standards.
+            2. Analyze the drift summary to identify exactly which resources and attributes have changed.
+            3. Locate the corresponding configuration blocks within the `.tf` files inside `${{ matrix.workspace }}`.
+            4. Modify the configuration to match the new state. If the drifted value is a secret, DO NOT hardcode it; ensure it is properly routed through a variable or data source.
+            5. Run `terraform fmt -recursive` on the `${{ matrix.workspace }}` directory before committing.
+
+            Constraints:
+            - Scope: DO NOT modify any files outside of the `${{ matrix.workspace }}` directory.
+            - Safety: DO NOT run `terraform apply` or `terraform destroy`.
 
             Automation Rules:
             - Create a new Pull Request with the fixes.
-            - Ensure the PR description summarizes the changes made to resolve the drift.
+            - In the PR description, explicitly list which resources were updated to resolve the drift.
 
       - name: Finalize Status
         if: always()
         run: |
           if [ "${{ steps.drift.outputs.exit_code }}" == "1" ]; then
-            echo "Failing job because a Terraform error occurred (Exit Code 1)."
+            echo "::error::Failing job because a Terraform error occurred (Exit Code 1)."
             exit 1
           fi
 
           if [ "${{ steps.drift.outputs.exit_code }}" == "2" ]; then
-            echo "Drift was detected (Exit Code 2), but remediation PR and Jules have been successfully triggered."
+            echo "::error::Drift was detected (Exit Code 2). A remediation PR has been triggered via Jules. This pipeline will fail until the drift is resolved."
+            exit 1 # Fail the pipeline to ensure visibility
           fi
