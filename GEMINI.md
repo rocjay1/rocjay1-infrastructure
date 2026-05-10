@@ -43,6 +43,7 @@
 
 - This workspace provisions shared Cloudflare and Entra/Zero Trust resources.
 - Manages global WAF rules, including the FlareBridge IP lockdown, to avoid per-workspace ruleset limits.
+- **Email**: Manages iCloud+ Custom Domain DNS records and DMARC security settings in `dns.tf`.
 - Treat changes here as high impact because other workspaces may depend on its remote-state outputs.
 - Be conservative with identity provider, group, and access-policy changes.
 
