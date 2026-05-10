@@ -16,7 +16,7 @@ The repository is organized into workspaces for different applications and share
 
 ## Technologies Used
 
-- **Terraform**: Infrastructure provisioning (Cloudflare, Azure Entra ID).
+- **Terraform**: Infrastructure provisioning (Cloudflare, Google Cloud, Azure Entra ID).
 - **Ansible**: Host configuration and Docker-based application deployment.
 - **Cloudflare Tunnels**: Secure exposure of internal services.
 - **Docker**: Containerized application environments.

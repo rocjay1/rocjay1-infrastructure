@@ -15,7 +15,7 @@ The primary goal of this workspace is to centralize resources that are used for 
 ## Workspace Structure
 
 - `terraform/`: Contains the Terraform configuration for provisioning the management resources.
-  - `main.tf`: Defines the WIF pool, provider, and service accounts.
+  - `main.tf`: Defines the WIF pool, provider, service accounts, and IAM bindings.
   - `variables.tf`: Configuration variables for the workspace.
   - `outputs.tf`: Key identifiers for use in other repositories or CI/CD configurations.
 
@@ -23,9 +23,9 @@ The primary goal of this workspace is to centralize resources that are used for 
 
 To apply changes to this workspace:
 
-1.  Navigate to the `terraform/` directory.
-2.  Initialize the workspace: `terraform init`.
-3.  Plan and apply changes: `terraform plan` and `terraform apply`.
+1. Navigate to the `terraform/` directory.
+2. Initialize the workspace: `terraform init`.
+3. Plan and apply changes: `terraform plan` and `terraform apply`.
 
 ### GitHub Actions Configuration
 

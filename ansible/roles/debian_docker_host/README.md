@@ -10,9 +10,9 @@ This role is designed to be a **lean baseline**. It focuses on host-level securi
 
 - **SSH Hardening:** Disables password authentication and root login. Requires SSH keys for access.
 - **Auto-Updates:** Configures `unattended-upgrades` for automatic security patches.
-- **Firewall (UFW) Omitted:** 
-    - **Rationale:** Host-level firewalls like UFW often conflict with Docker's `iptables` management. 
-    - **Security-in-Depth:** Network-level firewalls (managed via Terraform) provide a more robust perimeter. For generic hosts without a VPC, a separate firewall/fail2ban role should be used.
+- **Firewall (UFW) Omitted:**
+  - **Rationale:** Host-level firewalls like UFW often conflict with Docker's `iptables` management.
+  - **Security-in-Depth:** Network-level firewalls (managed via Terraform) provide a more robust perimeter. For generic hosts without a VPC, a separate firewall/fail2ban role should be used.
 - **Privilege Escalation:** Assumes `sudo` access for the `ansible_user`.
 
 ## Components

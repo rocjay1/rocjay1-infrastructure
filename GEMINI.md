@@ -65,7 +65,7 @@
 
 ### `google-cloud/terraform`
 
-- Provisions shared management and bootstrap resources (e.g., Workload Identity Federation, Service Accounts for CI/CD).
+- Provisions shared management and bootstrap resources (e.g., Workload Identity Federation, Service Accounts for CI/CD, and shared IAM bindings).
 - Typically targets the management GCP project (`abiding-cycle-464914-p6`).
 - Centralizes identity federation to avoid duplication across service-specific workspaces.
 
