@@ -2,6 +2,12 @@
 
 All notable changes to the Rocjay Infrastructure project will be documented in this file. This project uses a date-based versioning scheme.
 
+## [2026-05-10]
+
+### Added
+
+- Provisioned CNAME record for `docs.roccosmodernsite.net` pointing to `rocjay1.github.io` to support a namespace-wide GitHub Pages custom domain.
+
 ## [2026-05-09]
 
 ### Added

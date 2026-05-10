@@ -7,6 +7,7 @@ This workspace manages shared Cloudflare and Entra/Zero Trust resources for the 
 - **Zone & DNSSEC**: Basic configuration for `roccosmodernsite.net`.
 - **WAF Rules**: Global security rules, including Geo-blocking and IP bypasses for internal services.
 - **Email Infrastructure**: iCloud+ Custom Domain configuration and DMARC Management.
+- **GitHub Pages**: Custom domain mapping for `docs.roccosmodernsite.net` to support the GitHub Pages namespace.
 - **Turnstile**: Managed widgets for site protection.
 
 ## Email Infrastructure

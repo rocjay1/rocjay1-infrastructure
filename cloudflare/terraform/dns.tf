@@ -61,3 +61,16 @@ resource "cloudflare_dns_record" "dmarc" {
   ttl     = 1
   proxied = false
 }
+
+# -----------------------------------------------------------------------------
+# GITHUB PAGES
+# -----------------------------------------------------------------------------
+
+resource "cloudflare_dns_record" "github_docs" {
+  zone_id = var.zone_id
+  name    = "docs"
+  content = "rocjay1.github.io"
+  type    = "CNAME"
+  ttl     = 1
+  proxied = true
+}
