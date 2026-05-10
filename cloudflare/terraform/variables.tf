@@ -33,3 +33,17 @@ variable "uptime_check_secret" {
   type        = string
   sensitive   = true
 }
+
+variable "apple_domain_verification" {
+  description = "Apple domain verification code for iCloud+ Custom Email."
+  type        = string
+}
+
+variable "cloudflare_dmarc_report_emails" {
+  description = "List of email addresses for DMARC reporting (rua)."
+  type        = list(string)
+  default = [
+    "postmaster@roccosmodernsite.net",
+    "222f1d4731c5492a85d53be8fc66e283@dmarc-reports.cloudflare.net"
+  ]
+}
