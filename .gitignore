@@ -26,3 +26,6 @@ terraform.rc
 
 # Gemini
 .gemini/
+gcp-export
+gcloud-export-modules.tf
+google-cloud/api-export
