@@ -2,6 +2,13 @@
 
 All notable changes to the Rocjay Infrastructure project will be documented in this file. This project uses a date-based versioning scheme.
 
+## [2026-05-11]
+
+### Changed
+
+- Reorganized and cleaned up `mkdocs.yml` configuration for better maintainability.
+- Updated site and repository metadata in MkDocs to align with the `rocjay1` namespace.
+
 ## [2026-05-10]
 
 ### Added

@@ -1,5 +1,19 @@
-site_name: Rocjay Infrastructure Docs
+site_name: rocjay1 Infrastructure Docs
 site_url: https://docs.roccosmodernsite.net/rocjay1-infrastructure/
+repo_url: https://github.com/rocjay1/rocjay1-infrastructure
+repo_name: rocjay1-infrastructure
+
+nav:
+  - Home: index.md
+  - Workspaces:
+    - Ansible: ansible.md
+    - Cloudflare: cloudflare.md
+    - FlareBridge: flare-bridge.md
+    - Google Cloud: google-cloud.md
+    - Miniflux: miniflux.md
+
+extra:
+  homepage: https://docs.roccosmodernsite.net/
 
 theme:
   name: material
@@ -10,8 +24,8 @@ theme:
     text: Segoe UI
     code: Roboto Mono
 
-extra:
-  homepage: https://docs.roccosmodernsite.net/
+extra_css:
+  - stylesheets/extra.css
 
 markdown_extensions:
   - attr_list
@@ -21,16 +35,3 @@ markdown_extensions:
   - pymdownx.emoji:
       emoji_index: !!python/name:pymdownx.emoji.twemoji
       emoji_generator: !!python/name:pymdownx.emoji.to_svg
-
-extra_css:
-  - stylesheets/extra.css
-
-nav:
-  - Portal: https://docs.roccosmodernsite.net/
-  - Home: index.md
-  - Workspaces:
-    - Ansible: ansible.md
-    - Cloudflare: cloudflare.md
-    - FlareBridge: flare-bridge.md
-    - Google Cloud: google-cloud.md
-    - Miniflux: miniflux.md
