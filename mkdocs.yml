@@ -1,0 +1,32 @@
+site_name: Rocjay Infrastructure Docs
+site_url: https://docs.roccosmodernsite.net/rocjay1-infrastucture/
+
+theme:
+  name: material
+  palette:
+    primary: emerald
+    accent: emerald
+  font:
+    text: Segoe UI
+    code: Roboto Mono
+
+markdown_extensions:
+  - attr_list
+  - md_in_html
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.emoji:
+      emoji_index: !!python/name:pymdownx.emoji.twemoji
+      emoji_generator: !!python/name:pymdownx.emoji.to_svg
+
+extra_css:
+  - stylesheets/extra.css
+
+nav:
+  - Home: index.md
+  - Workspaces:
+    - Ansible: ansible.md
+    - Cloudflare: cloudflare.md
+    - FlareBridge: flare-bridge.md
+    - Google Cloud: google-cloud.md
+    - Miniflux: miniflux.md

@@ -1,0 +1,18 @@
+:root {
+  --md-primary-fg-color: #10b981;
+  --md-accent-fg-color: #10b981;
+}
+
+[data-md-color-scheme="slate"] {
+  --md-primary-fg-color: #10b981;
+  --md-accent-fg-color: #10b981;
+}
+
+/* Custom styles to match the hub's header */
+.md-header {
+  background-color: #10b981;
+}
+
+.md-tabs {
+  background-color: #10b981;
+}
