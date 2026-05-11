@@ -56,7 +56,7 @@ resource "google_service_account_iam_member" "wif_impersonation" {
 resource "google_storage_bucket_iam_member" "drift_detector_storage_admin" {
   bucket = var.tfstate_bucket
   role   = "roles/storage.objectAdmin"
-  member = "serviceAccount:${google_service_account.drift_detector.email}"
+  member = google_service_account.drift_detector.member
 }
 
 # -----------------------------------------------------------------------------
@@ -66,21 +66,21 @@ resource "google_project_iam_member" "drift_detector_viewer" {
   for_each = toset(var.managed_gcp_projects)
   project  = each.value
   role     = "roles/viewer"
-  member   = "serviceAccount:${google_service_account.drift_detector.email}"
+  member   = google_service_account.drift_detector.member
 }
 
 resource "google_project_iam_member" "drift_detector_security_reviewer" {
   for_each = toset(var.managed_gcp_projects)
   project  = each.value
   role     = "roles/iam.securityReviewer"
-  member   = "serviceAccount:${google_service_account.drift_detector.email}"
+  member   = google_service_account.drift_detector.member
 }
 
 resource "google_project_iam_member" "drift_detector_service_usage" {
   for_each = toset(var.managed_gcp_projects)
   project  = each.value
   role     = "roles/serviceusage.serviceUsageConsumer"
-  member   = "serviceAccount:${google_service_account.drift_detector.email}"
+  member   = google_service_account.drift_detector.member
 }
 
 # -----------------------------------------------------------------------------
@@ -89,11 +89,11 @@ resource "google_project_iam_member" "drift_detector_service_usage" {
 resource "google_project_iam_member" "drift_detector_token_creator" {
   project = var.project_id
   role    = "roles/iam.serviceAccountTokenCreator"
-  member  = "serviceAccount:${google_service_account.drift_detector.email}"
+  member  = google_service_account.drift_detector.member
 }
 
 resource "google_project_iam_member" "drift_detector_wif_viewer" {
   project = var.project_id
   role    = "roles/iam.workloadIdentityPoolViewer"
-  member  = "serviceAccount:${google_service_account.drift_detector.email}"
+  member  = google_service_account.drift_detector.member
 }
