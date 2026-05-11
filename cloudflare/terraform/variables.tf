@@ -37,6 +37,7 @@ variable "uptime_check_secret" {
 variable "apple_domain_verification" {
   description = "Apple domain verification code for iCloud+ Custom Email."
   type        = string
+  sensitive   = true
 }
 
 variable "cloudflare_dmarc_report_emails" {

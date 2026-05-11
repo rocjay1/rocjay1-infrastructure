@@ -40,16 +40,16 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
 
       - name: Authenticate to GCP
-        uses: google-github-actions/auth@v2
+        uses: google-github-actions/auth@c200f3691d83b41bf9bbd8638997a462592937ed
         with:
           workload_identity_provider: "projects/921000564704/locations/global/workloadIdentityPools/github-actions-pool/providers/github-provider"
           service_account: "terraform-drift-detector@abiding-cycle-464914-p6.iam.gserviceaccount.com"
 
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
+        uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd
         with:
           terraform_version: ${{ env.TERRAFORM_VERSION }}
           terraform_wrapper: false
@@ -93,7 +93,7 @@ jobs:
 
       - name: Invoke Jules to fix drift
         if: steps.drift.outputs.drift_detected == 'true'
-        uses: google-labs-code/jules-action@v1.0.0
+        uses: google-labs-code/jules-action@bff7875eaa123cac6742b7cfc51005b95ba4d566
         env:
           DRIFT_SUMMARY: ${{ steps.drift.outputs.plan_output }}
         with:
