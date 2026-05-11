@@ -1,5 +1,5 @@
 site_name: Rocjay Infrastructure Docs
-site_url: https://docs.roccosmodernsite.net/rocjay1-infrastucture/
+site_url: https://docs.roccosmodernsite.net/rocjay1-infrastructure/
 
 theme:
   name: material
@@ -10,9 +10,13 @@ theme:
     text: Segoe UI
     code: Roboto Mono
 
+extra:
+  homepage: https://docs.roccosmodernsite.net/
+
 markdown_extensions:
   - attr_list
-  - md_in_html
+...
+
   - pymdownx.highlight
   - pymdownx.superfences
   - pymdownx.emoji:
@@ -23,6 +27,7 @@ extra_css:
   - stylesheets/extra.css
 
 nav:
+  - Portal: https://docs.roccosmodernsite.net/
   - Home: index.md
   - Workspaces:
     - Ansible: ansible.md
