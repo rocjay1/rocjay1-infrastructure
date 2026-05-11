@@ -43,7 +43,7 @@ resource "cloudflare_dns_record" "icloud_verification" {
 resource "cloudflare_dns_record" "icloud_dkim" {
   zone_id = var.zone_id
   name    = "sig1._domainkey"
-  content = "sig1.dkim.roccosmodernsite.net.at.icloudmailadmin.com."
+  content = "sig1.dkim.roccosmodernsite.net.at.icloudmailadmin.com"
   type    = "CNAME"
   ttl     = 1
   proxied = false
