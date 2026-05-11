@@ -48,6 +48,7 @@ jobs:
     env:
       TF_VAR_cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       TF_VAR_uptime_check_secret: ${{ secrets.UPTIME_CHECK_SECRET }}
+      TF_VAR_apple_domain_verification: ${{ secrets.APPLE_DOMAIN_VERIFICATION }}
 
     steps:
       - name: Checkout
