@@ -4,28 +4,24 @@ This workspace manages shared Cloudflare and Entra/Zero Trust resources for the 
 
 ## Resources Managed
 
-- **Zone & DNSSEC**: Basic configuration for `roccosmodernsite.net`.
-- **WAF Rules**: Global security rules, including Geo-blocking and IP bypasses for internal services.
-- **Email Infrastructure**: iCloud+ Custom Domain configuration and DMARC Management.
-- **GitHub Pages**: Custom domain mapping for `docs.roccosmodernsite.net` to support the GitHub Pages namespace.
-- **Turnstile**: Managed widgets for site protection.
+- **Zone & DNSSEC**: Basic configuration for `roccosmodernsite.net` (managed in `zone.tf`).
+- **WAF Rules**: "Challenge by Default" policy that bypasses the Miniflux VM and authorized GCP health checks, but subjects all other traffic to a **Managed Challenge** (managed in `waf.tf`).
+- **Email Infrastructure**: iCloud+ Custom Domain configuration and DMARC Management (managed in `email.tf`).
+- **GitHub Pages**: Custom domain mapping and domain verification records (managed in `github.tf`).
+- **Turnstile**: Managed widgets for site protection (managed in `widgets.tf`).
 
 ## Email Infrastructure
 
-The domain `roccosmodernsite.net` is configured to use iCloud+ for custom email. The configuration is centralized in `dns.tf`.
+The domain `roccosmodernsite.net` is configured to use iCloud+ for custom email. 
 
 ### Key Records
 - **MX**: Points to iCloud mail servers.
 - **SPF**: Authorized to `icloud.com`.
 - **DKIM**: CNAME record for Apple's signing service.
-- **DMARC**: Hardened policy (`p=reject`) with dual reporting to:
-  - `postmaster@roccosmodernsite.net`
-  - Cloudflare DMARC Management dashboard.
+- **DMARC**: Hardened policy (`p=reject`) with dual reporting.
 
-### Required Variables
-The following variables must be provided (typically via environment variables or a secure `.tfvars` file):
-- `apple_domain_verification`: The unique verification code from the iCloud Custom Email setup wizard.
-- `cloudflare_dmarc_report_emails`: A list of email addresses for DMARC aggregate reports.
+### Configuration
+Static values like the iCloud verification code and DMARC reporting addresses are hardcoded or managed as constants in `locals.tf` since they do not vary across environments.
 
 ## Workflow
 

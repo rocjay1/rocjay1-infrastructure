@@ -37,6 +37,29 @@
 - Prefer environment variables or existing auth over writing secrets into `terraform.tfvars`.
 - Never commit secrets, tokens, `.tfvars` files with secrets, Ansible vault passwords, or decrypted vault contents.
 
+## Refactoring Principles
+
+To maintain consistency and readability across this "Singleton" infrastructure repository, apply the following heuristics during refactors:
+
+### 1. Modular File Structure (Functional Grouping)
+- Avoid monolithic `main.tf` or `dns.tf` files.
+- Group resources into focused files based on their **functional domain** (e.g., `email.tf`, `waf.tf`, `iam.tf`, `network.tf`).
+- This reduces the cognitive load during reviews and isolates changes to specific services.
+
+### 2. Facts (Locals) vs. Secrets (Variables)
+- **Variables**: Reserved strictly for **Secrets** (API tokens, private keys) or values that **actually vary** across environments/users. Mark secrets with `sensitive = true`.
+- **Locals**: Used for **Static Facts** about the infrastructure (Account IDs, Zone IDs, Project IDs, constant email lists). 
+  - Centralize these in a `locals.tf` file within the workspace.
+  - This keeps the code DRY (Don't Repeat Yourself) without the overhead of `.tfvars` for values that never change.
+
+### 3. Data Hardcoding
+- **Hardcode** single-use, non-sensitive data directly into the resource block (e.g., domain verification codes, specific CNAME targets).
+- Do not create variables for "one-off" data strings; it adds unnecessary abstraction and obscures the intent of the resource.
+
+### 4. Minimalist Outputs
+- Delete `outputs.tf` if no other workspace is actively consuming the values via `terraform_remote_state`.
+- Unused outputs add boilerplate and clutter terminal output during applies.
+
 ## Workspace-specific notes
 
 ### `cloudflare/terraform`
