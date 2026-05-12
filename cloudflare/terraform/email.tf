@@ -3,7 +3,7 @@
 # -----------------------------------------------------------------------------
 
 resource "cloudflare_dns_record" "icloud_mx_1" {
-  zone_id  = var.zone_id
+  zone_id  = local.zone_id
   name     = "@"
   content  = "mx01.mail.icloud.com"
   type     = "MX"
@@ -13,7 +13,7 @@ resource "cloudflare_dns_record" "icloud_mx_1" {
 }
 
 resource "cloudflare_dns_record" "icloud_mx_2" {
-  zone_id  = var.zone_id
+  zone_id  = local.zone_id
   name     = "@"
   content  = "mx02.mail.icloud.com"
   type     = "MX"
@@ -23,7 +23,7 @@ resource "cloudflare_dns_record" "icloud_mx_2" {
 }
 
 resource "cloudflare_dns_record" "icloud_spf" {
-  zone_id = var.zone_id
+  zone_id = local.zone_id
   name    = "@"
   content = "\"v=spf1 include:icloud.com ~all\""
   type    = "TXT"
@@ -32,16 +32,16 @@ resource "cloudflare_dns_record" "icloud_spf" {
 }
 
 resource "cloudflare_dns_record" "icloud_verification" {
-  zone_id = var.zone_id
+  zone_id = local.zone_id
   name    = "@"
-  content = "\"apple-domain=${var.apple_domain_verification}\""
+  content = "\"apple-domain=OUxq5J1XaQkdbvSx\""
   type    = "TXT"
   ttl     = 1
   proxied = false
 }
 
 resource "cloudflare_dns_record" "icloud_dkim" {
-  zone_id = var.zone_id
+  zone_id = local.zone_id
   name    = "sig1._domainkey"
   content = "sig1.dkim.roccosmodernsite.net.at.icloudmailadmin.com"
   type    = "CNAME"
@@ -54,23 +54,10 @@ resource "cloudflare_dns_record" "icloud_dkim" {
 # -----------------------------------------------------------------------------
 
 resource "cloudflare_dns_record" "dmarc" {
-  zone_id = var.zone_id
+  zone_id = local.zone_id
   name    = "_dmarc"
-  content = "\"v=DMARC1; p=reject; rua=${join(",", [for e in var.cloudflare_dmarc_report_emails : "mailto:${e}"])}\""
+  content = "\"v=DMARC1; p=reject; rua=${join(",", [for e in local.dmarc_report_emails : "mailto:${e}"])}\""
   type    = "TXT"
   ttl     = 1
   proxied = false
-}
-
-# -----------------------------------------------------------------------------
-# GITHUB PAGES
-# -----------------------------------------------------------------------------
-
-resource "cloudflare_dns_record" "github_docs" {
-  zone_id = var.zone_id
-  name    = "docs"
-  content = "rocjay1.github.io"
-  type    = "CNAME"
-  ttl     = 1
-  proxied = true
 }
