@@ -43,7 +43,7 @@ jobs:
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
 
       - name: Authenticate to GCP
-        uses: google-github-actions/auth@3.0.0
+        uses: google-github-actions/auth@v3.0.0
         with:
           workload_identity_provider: "projects/921000564704/locations/global/workloadIdentityPools/github-actions-pool/providers/github-provider"
           service_account: "terraform-drift-detector@abiding-cycle-464914-p6.iam.gserviceaccount.com"
