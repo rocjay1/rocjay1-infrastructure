@@ -21,7 +21,7 @@ jobs:
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
 
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@4.0.0
+        uses: hashicorp/setup-terraform@v4
         with:
           terraform_version: ${{ env.TERRAFORM_VERSION }}
 
@@ -61,7 +61,7 @@ jobs:
           service_account: "terraform-drift-detector@abiding-cycle-464914-p6.iam.gserviceaccount.com"
 
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@4.0.0
+        uses: hashicorp/setup-terraform@v4
         with:
           terraform_version: ${{ env.TERRAFORM_VERSION }}
           terraform_wrapper: false
