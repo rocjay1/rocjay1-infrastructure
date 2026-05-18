@@ -5,6 +5,8 @@
 
   vars:
     project_root: "/opt/miniflux"
+    debian_docker_host_storage_device: "/dev/disk/by-id/google-docker-data"
+    debian_docker_host_storage_mount: "/var/lib/docker"
     # Fallback to empty if not provided via extra vars or interactive prompt
     tunnel_token: "{{ vault_tunnel_token | default('set_token_in_vault') }}"
     db_password: "{{ vault_db_password | default('set_db_password_in_vault') }}"
@@ -15,8 +17,6 @@
       ansible.builtin.stat:
         path: vars/vault.yml
       register: vault_file
-      delegate_to: localhost
-      become: false
 
     - name: Load vault variables
       ansible.builtin.include_vars:
@@ -25,9 +25,6 @@
 
   roles:
     - role: gcp_host
-      vars:
-        debian_docker_host_storage_device: "/dev/disk/by-id/google-docker-data"
-        debian_docker_host_storage_mount: "/var/lib/docker"
 
   tasks:
     - name: Reset SSH connection after baseline user changes
@@ -63,14 +60,7 @@
     - name: Deploy services via Docker Compose
       community.docker.docker_compose_v2:
         project_src: "{{ project_root }}"
-        pull: always
         state: present
-        remove_orphans: true
-      become: false
-
-    - name: Prune old Docker images
-      community.docker.docker_prune:
-        images: true
-        images_filters:
-          dangling: false
-      become: false
+        pull: always
+      environment:
+        PATH: "{{ ansible_env.PATH }}:/usr/local/bin"
