@@ -1,0 +1,36 @@
+---
+- name: Manage persistent Docker storage
+  when: debian_docker_host_storage_device is defined
+  block:
+    - name: Install filesystem tools
+      ansible.builtin.apt:
+        name: e2fsprogs
+        state: present
+        update_cache: true
+
+    - name: Check storage disk filesystem
+      ansible.builtin.command: "blkid {{ debian_docker_host_storage_device }}"
+      register: _debian_docker_host_storage_blkid
+      changed_when: false
+      failed_when: false
+
+    - name: Create ext4 filesystem on storage disk
+      ansible.builtin.command: "mkfs.ext4 -F {{ debian_docker_host_storage_device }}"
+      changed_when: true
+      when: _debian_docker_host_storage_blkid.rc != 0
+
+    - name: Ensure storage mountpoint exists
+      ansible.builtin.file:
+        path: "{{ debian_docker_host_storage_mount | default('/var/lib/docker') }}"
+        state: directory
+        owner: root
+        group: root
+        mode: '0711'
+
+    - name: Mount storage disk
+      ansible.posix.mount:
+        path: "{{ debian_docker_host_storage_mount | default('/var/lib/docker') }}"
+        src: "{{ debian_docker_host_storage_device }}"
+        fstype: ext4
+        opts: defaults,nofail
+        state: mounted

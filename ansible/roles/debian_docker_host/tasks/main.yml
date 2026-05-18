@@ -2,6 +2,9 @@
 - name: Include host security and hardening tasks
   ansible.builtin.import_tasks: security.yml
 
+- name: Include storage tasks
+  ansible.builtin.import_tasks: storage.yml
+
 - name: Include Docker Engine lifecycle tasks
   ansible.builtin.import_tasks: docker.yml
 
