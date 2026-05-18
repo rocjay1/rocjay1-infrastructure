@@ -34,7 +34,7 @@ services:
     restart: unless-stopped
 
   tunnel:
-    image: cloudflare/cloudflared:2026.3.0
+    image: cloudflare/cloudflared:2026.5.0
     container_name: miniflux-tunnel
     restart: unless-stopped
     command: tunnel run
