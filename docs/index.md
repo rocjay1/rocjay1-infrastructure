@@ -12,7 +12,9 @@ The repository is organized into workspaces for different applications and share
 - **[flare-bridge](flare-bridge.md)**: Infrastructure provisioning for the FlareBridge project.
 - **[miniflux](miniflux.md)**: Infrastructure and deployment logic for the Miniflux RSS reader, utilizing Terraform for Cloudflare Tunnels and Ansible for container orchestration.
 - **terraform/modules**: Shared Terraform modules (e.g., `cloudflare_tunnel_app`) reusable across application workspaces.
-- **GEMINI.md**: Agent instructions and repository-wide standards for AI assistants working in this codebase.
+
+- **[GEMINI.md](../GEMINI.md)**: Agent instructions and repository-wide standards for AI assistants working in this codebase.
+
 
 ## Technologies Used
 

@@ -15,7 +15,7 @@ The project has been migrated from Cloudflare Pages to a more flexible architect
 
 The Terraform configuration provisions:
 
-- `cloudflare_worker_script`: The worker identity.
+- `cloudflare_worker`: The worker script and its configuration.
 - `cloudflare_d1_database`: Persistent storage for feed data.
 - `cloudflare_workers_custom_domain`: Routing for the custom domain.
 

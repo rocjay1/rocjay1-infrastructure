@@ -15,7 +15,9 @@ The primary goal of this workspace is to centralize resources that are used for 
 ## Workspace Structure
 
 - `terraform/`: Contains the Terraform configuration for provisioning the management resources.
-  - `main.tf`: Defines the WIF pool, provider, service accounts, and IAM bindings.
+  - `apis.tf`: Enables required Google Cloud APIs (IAM, STS, Secret Manager, etc.).
+  - `iam.tf`: Defines the Workload Identity Federation (WIF) pool, provider, service accounts, and IAM bindings.
+  - `main.tf`: Defines shared resources like storage buckets for remote state.
   - `variables.tf`: Configuration variables for the workspace.
   - `outputs.tf`: Key identifiers for use in other repositories or CI/CD configurations.
 

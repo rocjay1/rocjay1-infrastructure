@@ -5,7 +5,7 @@ This workspace manages shared Cloudflare and Entra/Zero Trust resources for the 
 ## Resources Managed
 
 - **Zone & DNSSEC**: Basic configuration for `roccosmodernsite.net` (managed in `zone.tf`).
-- **WAF Rules**: "Challenge by Default" policy that bypasses the Miniflux VM and authorized GCP health checks, but subjects all other traffic to a **Managed Challenge** (managed in `waf.tf`).
+- **WAF Rules**: "Challenge by Default" policy that bypasses authorized RSS readers (NetNewsWire, Miniflux, Reeder), the Miniflux VM, and authorized GCP health checks, but subjects all other traffic to a **Managed Challenge** (managed in `waf.tf`).
 - **Email Infrastructure**: iCloud+ Custom Domain configuration and DMARC Management (managed in `email.tf`).
 - **GitHub Pages**: Custom domain mapping and domain verification records (managed in `github.tf`).
 - **Turnstile**: Managed widgets for site protection (managed in `widgets.tf`).
