@@ -8,6 +8,18 @@ resource "cloudflare_ruleset" "main" {
   rules = [
     {
       action      = "skip"
+      description = "Allow: RSS Readers (NetNewsWire, etc)"
+      enabled     = true
+      expression  = "(http.host eq \"rss.roccosmodernsite.net\" and (http.user_agent contains \"NetNewsWire\" or http.user_agent contains \"Miniflux\" or http.user_agent contains \"Reeder\"))"
+      logging = {
+        enabled = true
+      }
+      action_parameters = {
+        ruleset = "current"
+      }
+    },
+    {
+      action      = "skip"
       description = "Allow: Miniflux VM"
       enabled     = true
       expression  = "(ip.src eq 8.231.239.219)"
@@ -37,8 +49,4 @@ resource "cloudflare_ruleset" "main" {
       expression  = "true"
     }
   ]
-
-  lifecycle {
-    ignore_changes = [rules]
-  }
 }
